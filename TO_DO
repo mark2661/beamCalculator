@@ -1,0 +1,10 @@
+TO-DO:
+
+- Add Material Interface (check) * Had to implement as abstract class
+- Make cross-section classes (check)
+- Implement Area Moment of Inertia Cross Section Methods
+- Make Proper UML Class Diagram
+- Find and Learn Python Beam Library
+- Find a way to calculate multiple reactions
+- Add support attributes to beam classes
+-
