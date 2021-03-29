@@ -4,7 +4,7 @@ TO-DO:
 - Make cross-section classes (check)
 - Implement Area Moment of Inertia Cross Section Methods
 - Make Proper UML Class Diagram
-- Find and Learn Python Beam Library
+- Find and Learn Python Beam Library (check) (use symPy lib)
 - Find a way to calculate multiple reactions
 - Add support attributes to beam classes
--
+- Link Beam Object to beam_analysis Lib

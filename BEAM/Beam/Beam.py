@@ -3,17 +3,21 @@ from abc import ABC, abstractmethod
 from BEAM.Load.Moment import Moment
 from BEAM.Load.PointLoad import PointLoad
 from BEAM.Load.UDL import UDL
+from sympy.physics.continuum_mechanics.beam import Beam as sympyBeam
+from sympy import *
+
 
 
 class Beam(ABC):
 
-    def __init__(self, length):
+    def __init__(self, length,cross_section, material):
         self.length = length
-        self.cross_section = None
-        self.material = None
+        self.cross_section = cross_section
+        self.material = material
         self.point_loads = []
         self.moments = []
         self.udl = []
+        self.supports = []
 
     """
     ** GETTERS AND SETTERS **
@@ -58,9 +62,31 @@ class Beam(ABC):
         self.point_loads.clear()
         self.moments.clear()
         self.udl.clear()
+
     """
     **************************************
     """
+
+    def calculate(self):
+        E = self.material.tensile_modulus
+        I = self.cross_section.get_moment_of_inertia()
+
+        beam = sympyBeam(self.length, E, I)
+        self.apply_loads(beam)
+        self.apply_supports(beam)
+        beam.solve_for_reaction_loads()
+
+    def apply_loads(self,beam):
+        for load in self.point_loads:
+            beam.apply_load(load.magnitude, load.start_location, -1)
+
+        for moment in self.moments:
+            beam.apply_load(moment.magnitude, moment.start_location, -2)
+
+    def apply_supports(self, beam):
+        for support in self.supports:
+            beam.apply_support(support.location, support.type)
+
 
     """
     ** ABSTRACT METHODS **
