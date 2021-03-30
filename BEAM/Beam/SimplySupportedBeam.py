@@ -8,7 +8,7 @@ from BEAM.Support.RollerSupport import RollerSupport
 class SimplySupportedBeam(Beam, ABC):
 
     def __init__(self, length, cross_section, material):
-        super.__init__(length, cross_section, material)
+        Beam.__init__(self, length, cross_section, material)
 
     def add_support(self, type, location):
         if type.lower() == "pin":
@@ -25,6 +25,5 @@ class SimplySupportedBeam(Beam, ABC):
         new_roller_support = RollerSupport(location)
         self.supports.append(new_roller_support)
 
-    def calculate(self):
 
 

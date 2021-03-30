@@ -5,7 +5,7 @@ from BEAM.Support.Support import Support
 class PinSupport(Support):
 
     def __init__(self, location, vertical_reaction=None, horizontal_reaction=None):
-        super.__init__(location, vertical_reaction)
+        Support.__init__(self, location, "pin", vertical_reaction)
         self.horizontal_reaction = horizontal_reaction
 
     def set_horizontal_reaction(self,magnitude):

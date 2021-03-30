@@ -10,7 +10,7 @@ from sympy import *
 
 class Beam(ABC):
 
-    def __init__(self, length,cross_section, material):
+    def __init__(self, length, cross_section, material):
         self.length = length
         self.cross_section = cross_section
         self.material = material
@@ -67,6 +67,17 @@ class Beam(ABC):
     **************************************
     """
 
+    """
+     ** FUNCTIONS FOR SUPPORTS **
+    """
+
+    def clear_supports(self):
+        self.supports.clear()
+
+    """
+    **************************************
+    """
+
     def calculate(self):
         E = self.material.tensile_modulus
         I = self.cross_section.get_moment_of_inertia()
@@ -74,7 +85,8 @@ class Beam(ABC):
         beam = sympyBeam(self.length, E, I)
         self.apply_loads(beam)
         self.apply_supports(beam)
-        beam.solve_for_reaction_loads()
+        total_amount_of_supports = len(self.supports)
+        beam.solve_for_reaction_loads(symbols('R:{}'.format(total_amount_of_supports)))
 
     def apply_loads(self,beam):
         for load in self.point_loads:
@@ -91,31 +103,31 @@ class Beam(ABC):
     """
     ** ABSTRACT METHODS **
     """
-    @abstractmethod
-    def calculate_max_moment(self):
-        pass
-
-    @abstractmethod
-    def calculate_moment_at_location_x(self,x):
-        pass
-
-    @abstractmethod
-    def calculate_max_deflection(self):
-        pass
-
-    @abstractmethod
-    def calculate_deflection_at_location_x(self,x):
-        pass
-
-    @abstractmethod
-    def calculate_max_shear_force(self):
-        pass
-
-    @abstractmethod
-    def calculate_shear_force_at_location_x(self,x):
-        pass
-
-    @abstractmethod
-    def calculate_support_reactions(self):
-        pass
+    # @abstractmethod
+    # def calculate_max_moment(self):
+    #     pass
+    #
+    # @abstractmethod
+    # def calculate_moment_at_location_x(self,x):
+    #     pass
+    #
+    # @abstractmethod
+    # def calculate_max_deflection(self):
+    #     pass
+    #
+    # @abstractmethod
+    # def calculate_deflection_at_location_x(self,x):
+    #     pass
+    #
+    # @abstractmethod
+    # def calculate_max_shear_force(self):
+    #     pass
+    #
+    # @abstractmethod
+    # def calculate_shear_force_at_location_x(self,x):
+    #     pass
+    #
+    # @abstractmethod
+    # def calculate_support_reactions(self):
+    #     pass
 

@@ -8,5 +8,6 @@ class RectangularCrossSection(CrossSection):
         self.width = width
         self.height = height
 
+    #Override
     def get_area_moment_of_inertia(self):
-        pass
+        return (self.width * pow(self.height, 3)) / 12
