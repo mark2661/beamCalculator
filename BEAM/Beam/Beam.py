@@ -5,6 +5,7 @@ from BEAM.Load.PointLoad import PointLoad
 from BEAM.Load.UDL import UDL
 from sympy.physics.continuum_mechanics.beam import Beam as sympyBeam
 from sympy import *
+from itertools import chain
 
 
 
@@ -14,10 +15,16 @@ class Beam(ABC):
         self.length = length
         self.cross_section = cross_section
         self.material = material
+
         self.point_loads = []
         self.moments = []
         self.udl = []
         self.supports = []
+
+        self.load_function = None
+        self.bending_moment_function = None
+        self.shear_force_function = None
+        self.deflection_function = None
 
     """
     ** GETTERS AND SETTERS **
@@ -39,6 +46,19 @@ class Beam(ABC):
 
     def set_material(self, material):
         self.material = material
+
+    def set_load_function(self,function):
+        self.load_function = function
+
+    def set_bending_moment_function(self,function):
+        self.bending_moment_function = function
+
+    def set_shear_force_function(self, function):
+        self.shear_force_function = function
+
+    def set_deflection_function(self, function):
+        self.deflection_function = function
+
     """
     ********************************
     """
@@ -80,24 +100,45 @@ class Beam(ABC):
 
     def calculate(self):
         E = self.material.tensile_modulus
-        I = self.cross_section.get_moment_of_inertia()
+        I = self.cross_section.get_area_moment_of_inertia()
 
         beam = sympyBeam(self.length, E, I)
-        self.apply_loads(beam)
-        self.apply_supports(beam)
-        total_amount_of_supports = len(self.supports)
-        beam.solve_for_reaction_loads(symbols('R:{}'.format(total_amount_of_supports)))
+        self.apply_loads_to_sympy_beam_object(beam)
+        self.apply_supports_to_sympy_beam_object(beam)
+        beam.solve_for_reaction_loads(*self.make_reaction_symbols_for_sympy_beam_object(beam))
 
-    def apply_loads(self,beam):
+
+        self.set_load_function(beam.load)
+        self.set_bending_moment_function(beam.bending_moment())
+        self.set_shear_force_function(beam.shear_force())
+        self.set_deflection_function(beam.deflection())
+
+
+
+
+    def apply_loads_to_sympy_beam_object(self, beam):
         for load in self.point_loads:
             beam.apply_load(load.magnitude, load.start_location, -1)
 
         for moment in self.moments:
             beam.apply_load(moment.magnitude, moment.start_location, -2)
 
-    def apply_supports(self, beam):
+        for udl in self.udl:
+            beam.apply_load(udl.magnitude,udl.start_location,0, end=udl.end_location)
+
+    def apply_supports_to_sympy_beam_object(self, beam):
         for support in self.supports:
-            beam.apply_support(support.location, support.type)
+            beam.apply_support(support.location, support.supportType)
+
+    def make_reaction_symbols_for_sympy_beam_object(self, beam):
+        reaction_symbols = []
+        for support in self.supports:
+            if support.supportType == "fixed":
+                reaction_symbols.extend(symbols('R_{0},M_{0}'.format(support.location)))
+            else:
+                reaction_symbols.append(symbols('R_{0}'.format(support.location)))
+        return reaction_symbols
+
 
 
     """

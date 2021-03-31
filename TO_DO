@@ -1,10 +1,6 @@
 TO-DO:
 
-- Add Material Interface (check) * Had to implement as abstract class
-- Make cross-section classes (check)
-- Implement Area Moment of Inertia Cross Section Methods
 - Make Proper UML Class Diagram
-- Find and Learn Python Beam Library (check) (use symPy lib)
-- Find a way to calculate multiple reactions
-- Add support attributes to beam classes
-- Link Beam Object to beam_analysis Lib
+- Unit Test for SimplySupported Beam (check)
+- Unit Test for different cross - sections
+- Unit Test for cantilever beam

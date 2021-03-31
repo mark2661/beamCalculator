@@ -10,11 +10,12 @@ class SimplySupportedBeam(Beam, ABC):
     def __init__(self, length, cross_section, material):
         Beam.__init__(self, length, cross_section, material)
 
-    def add_support(self, type, location):
-        if type.lower() == "pin":
+
+    def add_support(self, type_of_support, location):
+        if type_of_support.lower() == "pin":
             self.add_pin_support(location)
 
-        elif type.lower() == "roller":
+        elif type_of_support.lower() == "roller":
             self.add_roller_support(location)
 
     def add_pin_support(self, location):

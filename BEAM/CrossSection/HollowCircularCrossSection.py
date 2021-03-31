@@ -1,5 +1,5 @@
 from BEAM.CrossSection.CrossSection import CrossSection
-
+import math as maths
 
 class HollowCircularCrossSection(CrossSection):
 
@@ -10,4 +10,6 @@ class HollowCircularCrossSection(CrossSection):
 
     #Override
     def get_area_moment_of_inertia(self):
-        pass
+        outer_diameter = 2 * self.outer_radius
+        inner_diameter = 2 * self.inner_radius
+        return (maths.pi * (pow(outer_diameter, 2) - pow(inner_diameter, 4))) / 64
