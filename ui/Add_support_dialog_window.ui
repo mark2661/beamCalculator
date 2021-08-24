@@ -22,7 +22,7 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QComboBox" name="comboBox">
+    <widget class="QComboBox" name="supportTypeComboBox">
      <item>
       <property name="text">
        <string>Pin Support</string>

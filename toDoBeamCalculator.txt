@@ -1,8 +1,10 @@
-1.link button to functions and other windows
-    1.1 Add get_dialog_data functions to dialog windows
-2.display image as beam is updated
-3.error handling for incorrect inputs
-	3.1 display incorrectinput messgae
-	3.2 clear form and allow user to re-enter values
-4.allow user to update inputs (override existing values)
-5.Pull Git repo down
+1.display image as beam is updated
+2.error handling for incorrect inputs
+	2.1 display incorrectinput messgae
+	2.2 clear form and allow user to re-enter values
+5.allow user to update inputs (override existing values)
+6.Pull Git repo down
+
+
+Future Update
+1. link buttons for moments, units, e.t.c..
