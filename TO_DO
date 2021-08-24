@@ -1,6 +1,5 @@
 TO-DO:
 
 - Make Proper UML Class Diagram
-- Unit Test for SimplySupported Beam (check)
 - Unit Test for different cross - sections
-- Unit Test for cantilever beam
+- Research Python UI lib
