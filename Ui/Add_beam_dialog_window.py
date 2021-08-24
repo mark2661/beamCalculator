@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui/Add_beam_dialog_window.ui'
+# Form implementation generated from reading .uiFiles file '.uiFiles/Add_beam_dialog_window..uiFiles'
 #
 # Created by: PyQt5 UI code generator 5.14.1
 #
@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets, uic
 class Add_beam_dialog_window(QtWidgets.QDialog):
     def __init__(self):
         super(Add_beam_dialog_window, self).__init__()
-        uic.loadUi("ui/Add_beam_dialog_window.ui", self)
+        uic.loadUi(".uiFiles/Add_beam_dialog_window..uiFiles", self)
         self.buttonBox.accepted.connect(self.get_dialog_data)
         self.inputted_beam_length = None
 

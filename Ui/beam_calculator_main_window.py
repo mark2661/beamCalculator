@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui/beam_calculator_main_window.ui'
+# Form implementation generated from reading .uiFiles file '.uiFiles/beam_calculator_main_window..uiFiles'
 #
 # Created by: PyQt5 UI code generator 5.14.1
 #
@@ -141,24 +141,24 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    # def open_add_beam_window(self): #Group into one open_dialog_window function with a dialog.ui parameter
+    # def open_add_beam_window(self): #Group into one open_dialog_window function with a dialog..uiFiles parameter
     #     dialog = QtWidgets.QDialog()
-    #     dialog.ui = Ui_add_beam_dialog()
-    #     dialog.ui.setupUi(dialog)
+    #     dialog..uiFiles = Ui_add_beam_dialog()
+    #     dialog..uiFiles.setupUi(dialog)
     #     dialog.exec_()
     #     dialog.show()
     #
     # def open_add_support_window(self):
     #     dialog = QtWidgets.QDialog()
-    #     dialog.ui = Ui_add_support_dialog()
-    #     dialog.ui.setupUi(dialog)
+    #     dialog..uiFiles = Ui_add_support_dialog()
+    #     dialog..uiFiles.setupUi(dialog)
     #     dialog.exec_()
     #     dialog.show()
     #
     # def open_add_pointLoad_window(self):
     #     dialog = QtWidgets.QDialog()
-    #     dialog.ui = Ui_add_pointLoad_dialog()
-    #     dialog.ui.setupUi(dialog)
+    #     dialog..uiFiles = Ui_add_pointLoad_dialog()
+    #     dialog..uiFiles.setupUi(dialog)
     #     dialog.exec_()
     #     dialog.show()
 
