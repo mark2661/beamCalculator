@@ -9,6 +9,10 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from Add_beam_dialog_window import Ui_Dialog as Ui_add_beam_dialog
+from Add_support_dialog_window import Ui_Dialog as Ui_add_support_dialog
+from Add_pointLoad_dialog_window import Ui_Dialog as Ui_add_pointLoad_dialog
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -27,21 +31,45 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
+        """
+        *********************************************************************
+        Code for ADDBeamButton
+        """
         self.AddBeamButton = QtWidgets.QPushButton(self.centralwidget)
         self.AddBeamButton.setMinimumSize(QtCore.QSize(120, 0))
         self.AddBeamButton.setObjectName("AddBeamButton")
+        #self.AddBeamButton.clicked.connect(self.open_add_beam_window)
+        """
+        ********************************************************************
+        """
         self.verticalLayout.addWidget(self.AddBeamButton)
         spacerItem = QtWidgets.QSpacerItem(120, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem)
+        """
+        *********************************************************************
+        Code for ADDSupportButton
+        """
         self.AddSupportButton = QtWidgets.QPushButton(self.centralwidget)
         self.AddSupportButton.setMinimumSize(QtCore.QSize(120, 0))
         self.AddSupportButton.setObjectName("AddSupportButton")
+        #self.AddSupportButton.clicked.connect(self.open_add_support_window)
+        """
+        ********************************************************************
+        """
         self.verticalLayout.addWidget(self.AddSupportButton)
         spacerItem1 = QtWidgets.QSpacerItem(120, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem1)
+        """
+        *********************************************************************
+        Code for ADDPointLoadButton
+        """
         self.AddPointLoadButton = QtWidgets.QPushButton(self.centralwidget)
         self.AddPointLoadButton.setMinimumSize(QtCore.QSize(120, 0))
         self.AddPointLoadButton.setObjectName("AddPointLoadButton")
+        #self.AddPointLoadButton.clicked.connect(self.open_add_pointLoad_window)
+        """
+        ********************************************************************
+        """
         self.verticalLayout.addWidget(self.AddPointLoadButton)
         spacerItem2 = QtWidgets.QSpacerItem(120, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem2)
@@ -113,6 +141,27 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    # def open_add_beam_window(self): #Group into one open_dialog_window function with a dialog.ui parameter
+    #     dialog = QtWidgets.QDialog()
+    #     dialog.ui = Ui_add_beam_dialog()
+    #     dialog.ui.setupUi(dialog)
+    #     dialog.exec_()
+    #     dialog.show()
+    #
+    # def open_add_support_window(self):
+    #     dialog = QtWidgets.QDialog()
+    #     dialog.ui = Ui_add_support_dialog()
+    #     dialog.ui.setupUi(dialog)
+    #     dialog.exec_()
+    #     dialog.show()
+    #
+    # def open_add_pointLoad_window(self):
+    #     dialog = QtWidgets.QDialog()
+    #     dialog.ui = Ui_add_pointLoad_dialog()
+    #     dialog.ui.setupUi(dialog)
+    #     dialog.exec_()
+    #     dialog.show()
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -130,3 +179,13 @@ class Ui_MainWindow(object):
         self.LengthUnitComboBox.setItemText(2, _translate("MainWindow", "mm"))
         self.SolveButton.setText(_translate("MainWindow", "Solve"))
         self.ResetButton.setText(_translate("MainWindow", "Reset"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
