@@ -6,13 +6,13 @@ from Add_pointLoad_dialog_window import Add_pointLoad_dialog_window
 class Window(QtWidgets.QMainWindow):
     def __init__(self):
         super(Window, self).__init__()
-        uic.loadUi(".uiFiles/beam_calculator_main_window..uiFiles",self)
+        uic.loadUi("/home/mark/Desktop/Beam Calculator/beamCalculator/Ui/uiFiles/beam_calculator_main_window.ui",self)
         #Define click event actions for buttons
         self.AddBeamButton.clicked.connect(self.open_add_beam_window)
         self.AddPointLoadButton.clicked.connect(self.open_add_pointLoad_window)
         self.AddSupportButton.clicked.connect(self.open_add_support_window)
 
-    def open_add_beam_window(self): #Group into one open_dialog_window function with a dialog..uiFiles parameter
+    def open_add_beam_window(self): #Group into one open_dialog_window function with a dialog.uiFiles parameter
         dialog = Add_beam_dialog_window()
         dialog.exec_()
         dialog.show()

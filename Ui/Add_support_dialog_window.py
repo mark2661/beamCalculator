@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading .uiFiles file '.uiFiles/Add_support_dialog_window..uiFiles'
+# Form implementation generated from reading uiFiles file 'uiFiles/Add_support_dialog_window.uiFiles'
 #
 # Created by: PyQt5 UI code generator 5.14.1
 #
@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets, uic
 class Add_support_dialog_window(QtWidgets.QDialog):
     def __init__(self):
         super(Add_support_dialog_window, self).__init__()
-        uic.loadUi(".uiFiles/Add_support_dialog_window..uiFiles", self)
+        uic.loadUi("/home/mark/Desktop/Beam Calculator/beamCalculator/Ui/uiFiles/Add_support_dialog_window.ui", self)
         self.buttonBox.accepted.connect(self.get_dialog_data)
         self.supports = []
         self.support_type = self.support_location = None
