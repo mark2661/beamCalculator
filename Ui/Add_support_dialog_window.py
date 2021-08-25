@@ -22,4 +22,7 @@ class Add_support_dialog_window(QtWidgets.QDialog):
         self.support_location = self.SupportLocationInputField.text()
         self.supports.append((self.support_type, self.support_location))
 
+    def get_supports(self):
+        return self.supports
+
 

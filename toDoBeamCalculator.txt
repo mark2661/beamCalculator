@@ -1,3 +1,4 @@
+0.Reread calculator code
 1.display image as beam is updated
 2.error handling for incorrect inputs
 	2.1 display incorrectinput messgae
