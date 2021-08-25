@@ -1,6 +1,6 @@
-from BEAM.Load.Moment import Moment
-from BEAM.Load.PointLoad import PointLoad
-from BEAM.Support.Support import Support
+from Calculator.Load.Moment import Moment
+from Calculator.Load.PointLoad import PointLoad
+from Calculator.Support.Support import Support
 
 
 class FixedSupport(Support):

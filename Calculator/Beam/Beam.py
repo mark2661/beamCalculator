@@ -10,6 +10,9 @@ from itertools import chain
 from Calculator.Load.PointLoad import PointLoad
 from Calculator.Load.UDL import UDL
 from Calculator.Load.Moment import Moment
+from Calculator.Support.FixedSupport import FixedSupport
+from Calculator.Support.PinSupport import PinSupport
+from Calculator.Support.RollerSupport import RollerSupport
 
 
 class Beam(ABC):
@@ -29,6 +32,9 @@ class Beam(ABC):
         self.shear_force_function = None
         self.deflection_function = None
         self.free_body_diagram = None
+
+        self.load_mappings = {"point": self.add_point_load, "moment":self.add_moment, "udl":self.add_udl}
+        self.support_mappings = {"pin":self.add_pin_support, "roller":self.add_roller_support, "fixed":self.add_fixed_support}
 
     """
     ** GETTERS AND SETTERS **
@@ -50,6 +56,18 @@ class Beam(ABC):
 
     def set_material(self, material):
         self.material = material
+
+    def set_point_loads(self, points_loads):
+        self.point_loads = points_loads
+
+    def set_moments(self, moments):
+        self.moments = moments
+
+    def set_udl(self, udl):
+        self.udl = udl
+
+    def set_supports(self, supports):
+        self.supports = supports
 
     def set_load_function(self,function):
         self.load_function = function
@@ -74,11 +92,15 @@ class Beam(ABC):
     """
     ** FUNCTIONS FOR FORCES **
     """
-    def add_point_load(self,magnitude,location):
+
+    def add_load(self,type_of_load, magnitude, location, end_location=None):
+        self.load_mappings[type_of_load](magnitude, location, end_location)
+
+    def add_point_load(self,magnitude,location, *args):
         new_point_load = PointLoad(magnitude, location)
         self.point_loads.append(new_point_load)
 
-    def add_moment(self,magnitude,location):
+    def add_moment(self,magnitude,location, *args):
         new_moment = Moment(magnitude,location)
         self.moments.append(new_moment)
 
@@ -98,6 +120,20 @@ class Beam(ABC):
     """
      ** FUNCTIONS FOR SUPPORTS **
     """
+    def add_support(self, type_of_support, location):
+        self.support_mappings[type_of_support](location)
+
+    def add_pin_support(self, location):
+        new_pin_support = PinSupport(location)
+        self.supports.append(new_pin_support)
+
+    def add_roller_support(self, location):
+        new_roller_support = RollerSupport(location)
+        self.supports.append(new_roller_support)
+
+    def add_fixed_support(self, location):
+        new_fixed_support = FixedSupport(location)
+        self.supports.append(new_fixed_support)
 
     def clear_supports(self):
         self.supports.clear()
