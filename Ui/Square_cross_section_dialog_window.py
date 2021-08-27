@@ -1,12 +1,12 @@
 from PyQt5 import QtWidgets, uic
 
-from Calculator.CrossSection.SquareCrossSection import SquareCrossSection
+from beamCalculator.Calculator.CrossSection.SquareCrossSection import SquareCrossSection
 
 
 class Square_cross_section_dialog_window(QtWidgets.QDialog):
     def __init__(self):
         super(Square_cross_section_dialog_window, self).__init__()
-        uic.loadUi("/home/mark/Desktop/Beam Calculator/beamCalculator/Ui/uiFiles/Square_cross_section_dialog_window.ui", self)
+        uic.loadUi("/home/mark/Desktop/Beam Calculator/beamCalculator/Ui/UiFiles/Square_cross_section_dialog_window.ui", self)
         self.buttonBox.accepted.connect(self.get_dialog_data)
         self.cross_section_length = None
         self.user_cross_section = None

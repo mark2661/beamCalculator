@@ -1,12 +1,12 @@
 from PyQt5 import QtWidgets, uic
 
-from Calculator.CrossSection.RectangularCrossSection import RectangularCrossSection
+from beamCalculator.Calculator.CrossSection.RectangularCrossSection import RectangularCrossSection
 
 
 class Rectangular_cross_section_dialog_window(QtWidgets.QDialog):
     def __init__(self):
         super(Rectangular_cross_section_dialog_window, self).__init__()
-        uic.loadUi("/home/mark/Desktop/Beam Calculator/beamCalculator/Ui/uiFiles/Rectangular_cross_section_dialog_window.ui", self)
+        uic.loadUi("/home/mark/Desktop/Beam Calculator/beamCalculator/Ui/UiFiles/Rectangular_cross_section_dialog_window.ui", self)
         self.buttonBox.accepted.connect(self.get_dialog_data)
         self.cross_section_length = self.cross_section_width = None
         self.user_cross_section = None

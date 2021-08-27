@@ -1,4 +1,4 @@
-0.Reread calculator code
+0.test data trnasfer between Ui and Calculator
 1.display image as beam is updated
 2.error handling for incorrect inputs
 	2.1 display incorrectinput messgae

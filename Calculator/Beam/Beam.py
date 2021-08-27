@@ -7,12 +7,12 @@ from sympy.physics.continuum_mechanics.beam import Beam as sympyBeam
 from sympy import *
 from itertools import chain
 
-from Calculator.Load.PointLoad import PointLoad
-from Calculator.Load.UDL import UDL
-from Calculator.Load.Moment import Moment
-from Calculator.Support.FixedSupport import FixedSupport
-from Calculator.Support.PinSupport import PinSupport
-from Calculator.Support.RollerSupport import RollerSupport
+from beamCalculator.Calculator.Load.PointLoad import PointLoad
+from beamCalculator.Calculator.Load.UDL import UDL
+from beamCalculator.Calculator.Load.Moment import Moment
+from beamCalculator.Calculator.Support.FixedSupport import FixedSupport
+from beamCalculator.Calculator.Support.PinSupport import PinSupport
+from beamCalculator.Calculator.Support.RollerSupport import RollerSupport
 
 
 class Beam(ABC):
@@ -54,20 +54,13 @@ class Beam(ABC):
     def set_cross_section(self, cross_section):
         self.cross_section = cross_section
 
-    def set_material(self, material):
-        self.material = material
-
-    def set_point_loads(self, points_loads):
-        self.point_loads = points_loads
-
-    def set_moments(self, moments):
-        self.moments = moments
-
-    def set_udl(self, udl):
-        self.udl = udl
+    def set_loads(self, loads):
+        for load in loads:
+            self.add_load(*load)
 
     def set_supports(self, supports):
-        self.supports = supports
+        for support in supports:
+            self.add_support(*support)
 
     def set_load_function(self,function):
         self.load_function = function

@@ -1,5 +1,5 @@
-from Calculator.Load.PointLoad import PointLoad
-from Calculator.Support.Support import Support
+from beamCalculator.Calculator.Load.PointLoad import PointLoad
+from beamCalculator.Calculator.Support.Support import Support
 
 
 class PinSupport(Support):

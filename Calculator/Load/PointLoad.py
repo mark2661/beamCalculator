@@ -1,4 +1,4 @@
-from Calculator.Load.Load import Load
+from beamCalculator.Calculator.Load.Load import Load
 
 
 class PointLoad(Load):

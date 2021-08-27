@@ -1,4 +1,4 @@
-from Calculator.CrossSection.CrossSection import CrossSection
+from beamCalculator.Calculator.CrossSection.CrossSection import CrossSection
 
 
 class RectangularCrossSection(CrossSection):

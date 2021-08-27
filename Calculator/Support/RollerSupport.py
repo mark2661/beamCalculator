@@ -1,4 +1,4 @@
-from Calculator.Support.Support import Support
+from beamCalculator.Calculator.Support.Support import Support
 
 
 class RollerSupport(Support):

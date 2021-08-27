@@ -1,4 +1,4 @@
-from Calculator.Material.Material import Material
+from beamCalculator.Calculator.Material.Material import Material
 
 
 class SteelAISI1045(Material):

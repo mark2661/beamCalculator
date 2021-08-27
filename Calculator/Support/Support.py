@@ -1,6 +1,6 @@
 from abc import ABC
 
-from Calculator.Load.PointLoad import PointLoad
+from beamCalculator.Calculator.Load.PointLoad import PointLoad
 
 
 class Support(ABC):
