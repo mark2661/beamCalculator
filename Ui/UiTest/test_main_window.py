@@ -2,5 +2,4 @@ import unittest, pyautogui
 
 
 class TestMainWindow(unittest.TestCase):
-
-    def test_
+    pass

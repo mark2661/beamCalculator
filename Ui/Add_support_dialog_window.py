@@ -17,8 +17,8 @@ class Add_support_dialog_window(QtWidgets.QDialog):
         self.support_type = self.support_location = None
 
     def get_dialog_data(self):
-        self.support_type = self.supportTypeComboBox.currentText()
-        self.support_location = self.SupportLocationInputField.text()
+        self.support_type = self.supportTypeComboBox.currentText().split()[0].lower()
+        self.support_location = float(self.SupportLocationInputField.text())
 
 
 
