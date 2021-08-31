@@ -1,14 +1,11 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading UiFiles file 'UiFiles/Add_beam_dialog_window.UiFiles'
-#
-# Created by: PyQt5 UI code generator 5.14.1
-#
-# WARNING! All changes made in this file will be lost!
-
-
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from PyQt5.QtWidgets import *
+
+from beamCalculator.Ui.Show_dialog_error_messgae_box import showDialogErrorMessageBox
+
+
+def isValidInputLength(length):
+    return float(length) > 0
 
 class InputError(Exception):
     print("input error")
@@ -24,17 +21,14 @@ class Add_beam_dialog_window(QtWidgets.QDialog):
     def get_dialog_data(self):
         try:
             length = self.BeamLengthInputField.text()
-            self.inputted_beam_length = float(length)
-            self.close()
+            if isValidInputLength(length): #reject
+                self.inputted_beam_length = float(length)
+                self.close()
         except ValueError:
-            self.showErrorMessageBox()
+            showDialogErrorMessageBox()
+            self.BeamLengthInputField.clear()
 
 
-    def showErrorMessageBox(self):
-        self.msg = QMessageBox()
-        self.msg.setText("InvalidInput")
-        self.msg.setStandardButtons(QMessageBox.Ok)
-        self.msg.exec_()
 
 
 

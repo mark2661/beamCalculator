@@ -1,7 +1,10 @@
+import concurrent.futures
+import time
 
 import pytest
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
+from PyQt5.QtWidgets import QApplication, QMessageBox
 
 from beamCalculator.Ui.Add_support_dialog_window import Add_support_dialog_window
 
@@ -13,21 +16,35 @@ def window(qtbot):
     qtbot.addWidget(window)
     return window
 
-@pytest.mark.skip(reason="difficulty implmenting qtbot with the ui")
-def test_get_dialog_data_correct_input(window, qtbot):
+@pytest.mark.parametrize(
+    'inputSupportType, inputSupportLocation, expectedSupportType, expectedSupportLocation, expectedSupportLocationDataType', [
+        ('pin', "50", 'pin', 50.0, float), #int input
+        ('roller', "100.0", 'roller', 100.0, float), #float input
+        ('roller', "one hundred", 'roller', None,  type(None)), #string input
+        ('fixed', '1 hundred', 'fixed', None, type(None)), #mixed incorrect data type input
+        ('pin', '-100', 'pin', None, type(None)), # negative input
+        ('pin','', 'pin', None, type(None)), #empty input
+        ('pin', None, 'pin', None, type(None)) # NoneType input
+        # test location outside of beam length
+    ]
+)
+def test_get_dialog_data(inputSupportType, inputSupportLocation, expectedSupportType, expectedSupportLocation, expectedSupportLocationDataType, window, qtbot):
     #Arrage
-    qtbot.keyClicks(window.supportTypeComboBox, "R")
+    def close_message_box():
+        time.sleep(0.5)
+        if type(QApplication.activeWindow()) is QMessageBox:
+            QApplication.activeWindow().accept()
+    """ Inorder to automatically close the error message window, a thread is created which checks if the error message window
+    is active. If it is the window is closed and the test can continue in the dialog window.
+    """
     #Action
-    qtbot.keyClick(window.supportTypeComboBox, QtCore.Qt.Key_Enter)
-    qtbot.keyClicks(window.suppportLocationInputField, "100")
-    qtbot.keyClick(window.suppportLocationInputField, QtCore.Qt.Key_Enter)
-
+    executor = concurrent.futures.ThreadPoolExecutor().submit(close_message_box)
+    qtbot.keyClicks(window.supportTypeComboBox, inputSupportType)
+    qtbot.keyClicks(window.supportLocationInputField, inputSupportLocation)
+    qtbot.mouseClick(window.Ok_button, QtCore.Qt.LeftButton)
     #Assert
-    assert window.support_type == "roller"
-    assert type(window.support_type) == str
+    assert window.support_type == expectedSupportType
+    assert window.support_location == expectedSupportLocation
+    assert type(window.support_location) == expectedSupportLocationDataType
 
-    assert window.support_location == 100.0
-    assert type(window.support_location) == float
-
-def test_get_dialog_data_correct_input():
-    window = Add_support_dialog_window()
+    executor.cancel()  # close the thread
