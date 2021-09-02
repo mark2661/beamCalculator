@@ -1,12 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading UiFiles file 'UiFiles/Add_pointLoad_dialog_window.UiFiles'
-#
-# Created by: PyQt5 UI code generator 5.14.1
-#
-# WARNING! All changes made in this file will be lost!
-
-
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 
 from beamCalculator.Ui.Show_dialog_error_messgae_box import showDialogErrorMessageBox

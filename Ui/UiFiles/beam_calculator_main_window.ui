@@ -30,7 +30,7 @@
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
-          <widget class="QPushButton" name="AddBeamButton">
+          <widget class="QPushButton" name="addBeamButton">
            <property name="minimumSize">
             <size>
              <width>120</width>
@@ -41,7 +41,7 @@
             <string>Add Beam</string>
            </property>
           </widget>
-          <widget class="QPushButton" name="AddSupportButton">
+          <widget class="QPushButton" name="addSupportButton">
            <property name="minimumSize">
             <size>
              <width>120</width>
@@ -52,7 +52,7 @@
             <string>Add Support</string>
            </property>
           </widget>
-          <widget class="QPushButton" name="AddPointLoadButton">
+          <widget class="QPushButton" name="addPointLoadButton">
            <property name="minimumSize">
             <size>
              <width>120</width>
@@ -63,7 +63,7 @@
             <string>Add point load</string>
            </property>
           </widget>
-          <widget class="QPushButton" name="AddMomentButton">
+          <widget class="QPushButton" name="addMomentButton">
            <property name="minimumSize">
             <size>
              <width>120</width>
@@ -74,7 +74,7 @@
             <string>Add Moment</string>
            </property>
           </widget>
-          <widget class="QPushButton" name="AddUDLButton">
+          <widget class="QPushButton" name="addUDLButton">
            <property name="minimumSize">
             <size>
              <width>120</width>
@@ -125,7 +125,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="CrossSectionSelectionComboBox">
+             <widget class="QComboBox" name="crossSectionSelectionComboBox">
               <item>
                <property name="text">
                 <string/>
@@ -161,7 +161,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="LengthUnitComboBox">
+             <widget class="QComboBox" name="lengthUnitComboBox">
               <property name="minimumSize">
                <size>
                 <width>120</width>
@@ -203,7 +203,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="ForceUnitComboBox">
+             <widget class="QComboBox" name="forceUnitComboBox">
               <property name="minimumSize">
                <size>
                 <width>120</width>
@@ -234,7 +234,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QPushButton" name="SolveButton">
+         <widget class="QPushButton" name="solveButton">
           <property name="minimumSize">
            <size>
             <width>200</width>
@@ -253,7 +253,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="ResetButton">
+         <widget class="QPushButton" name="resetButton">
           <property name="minimumSize">
            <size>
             <width>200</width>

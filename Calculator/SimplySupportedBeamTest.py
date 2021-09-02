@@ -1,9 +1,9 @@
 import unittest, numpy
-from Calculator import *
-from Calculator.Beam.CantileverdBeam import CantileveredBeam
-from Calculator.Beam.SimplySupportedBeam import SimplySupportedBeam
-from Calculator.CrossSection.SquareCrossSection import SquareCrossSection
-from Calculator.Material.SteelAISI1045 import SteelAISI1045
+
+from beamCalculator.Calculator.Beam.CantileverdBeam import CantileveredBeam
+from beamCalculator.Calculator.Beam.SimplySupportedBeam import SimplySupportedBeam
+from beamCalculator.Calculator.CrossSection.SquareCrossSection import SquareCrossSection
+from beamCalculator.Calculator.Material.SteelAISI1045 import SteelAISI1045
 
 
 class MyTestCase(unittest.TestCase):

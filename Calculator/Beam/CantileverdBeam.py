@@ -1,9 +1,9 @@
 from abc import ABC
 
-from Calculator.Beam.Beam import Beam
-from Calculator.Support.FixedSupport import FixedSupport
-from Calculator.Support.PinSupport import PinSupport
-from Calculator.Support.RollerSupport import RollerSupport
+from beamCalculator.Calculator.Beam.Beam import Beam
+from beamCalculator.Calculator.Support.FixedSupport import FixedSupport
+from beamCalculator.Calculator.Support.PinSupport import PinSupport
+from beamCalculator.Calculator.Support.RollerSupport import RollerSupport
 
 
 class CantileveredBeam(Beam, ABC):
