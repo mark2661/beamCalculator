@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QMessageBox
 from beamCalculator.Ui.Show_dialog_error_messgae_box import showDialogErrorMessageBox
 
 def isValidInputLocation(length):
-    return float(length) > 0
+    return float(length) >= 0
 
 class Add_support_dialog_window(QtWidgets.QDialog):
     def __init__(self):
@@ -20,6 +20,8 @@ class Add_support_dialog_window(QtWidgets.QDialog):
             if isValidInputLocation(self.supportLocationInputField.text()):
                 self.support_location = float(self.supportLocationInputField.text())
                 self.close()
+            else:
+                raise ValueError
         except ValueError:
             showDialogErrorMessageBox()
             self.supportLocationInputField.clear()

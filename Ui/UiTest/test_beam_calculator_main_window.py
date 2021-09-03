@@ -6,6 +6,7 @@ from beamCalculator.Calculator.CrossSection.RectangularCrossSection import Recta
 from beamCalculator.Calculator.CrossSection.SquareCrossSection import SquareCrossSection
 from beamCalculator.Calculator.Material.SteelAISI1045 import SteelAISI1045
 from beamCalculator.Ui.beam_calculator_main_window import Window
+from beamCalculator.Calculator.Beam.Beam import Beam
 
 @pytest.fixture
 def window(qtbot):
@@ -183,7 +184,7 @@ def test_get_selected_material(inputtedMaterial, expectedResultType, window, qtb
     assert type(window.get_selected_material()) == type(expectedResultType)
 
 
-# @pytest.mark.skip()
+@pytest.mark.skip()
 @pytest.mark.parametrize(
     'inputtedMaterial, expectedResultType', [
         ('Steel', SteelAISI1045()), #correct input
@@ -194,19 +195,59 @@ def test_get_selected_crossSection(inputtedMaterial, expectedResultType, window,
     pass
 
 @pytest.mark.parametrize(
-    'inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial, expectedResultType', [
-        ('Steel', SteelAISI1045()), #correct input
-        (None, None) # NoneType input
+    'inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial', [
+        ('1', [("point", 100.0, 0.5)], [("pin", 0.0), ("roller", 1)], SquareCrossSection(0.1), SteelAISI1045), #correct input
+        #(None, None) # NoneType input
     ]
 )
-def test_solve(inputtedMaterial, expectedResultType, window, qtbot):
+def test_isValidBeamInput(inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial, window, qtbot):
     #Arrage
-    def mock_get_selected_material(inputtedMaterial):
-        return inputtedMaterial
+    def mock_get_selected_material():
+        return inputtedMaterial()
 
-    with mock.patch('beamCalculator.Ui.beam_calculator_main_window.get_selected_material',return_value= mock_get_selected_material(inputtedMaterial)):
-        #Action
-        qtbot.keyClicks(window.materialSelectionComboBox, inputtedMaterial)
-        qtbot.keyClicks(window.materialSelectionComboBox, "QtCore.Qt.Key_Enter")
-        #Assert
-        assert type(window.get_selected_material()) == type(expectedResultType)
+    #monkey path get_selected_material function
+    window.get_selected_material = mock_get_selected_material
+
+
+    window.user_beam_length = inputtedBeamLength
+    window.user_beam_loads = inputtedBeamLoads
+    window.user_beam_supports = inputtedBeamSupports
+    window.user_beam_cross_section = inputtedBeamCrossSection
+
+    #Action
+    window.isValidBeamInput()
+
+
+
+
+
+@pytest.mark.parametrize(
+    'inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial', [
+        ('1', [("point", 100.0, 0.5)], [("pin", 0.0), ("roller", 1)], SquareCrossSection(0.1), SteelAISI1045), #correct input
+        #(None, None) # NoneType input
+    ]
+)
+def test_solve(inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial, window, qtbot):
+    #Arrage
+    def mock_get_selected_material():
+        return inputtedMaterial()
+
+    #monkey path get_selected_material function
+    window.get_selected_material = mock_get_selected_material
+
+
+    window.user_beam_length = inputtedBeamLength
+    window.user_beam_loads = inputtedBeamLoads
+    window.user_beam_supports = inputtedBeamSupports
+    window.user_beam_cross_section = inputtedBeamCrossSection
+    assert window.user_beam == None
+    #Action
+    qtbot.mouseClick(window.solveButton, QtCore.Qt.LeftButton)
+    #Assert
+    assert type(window.user_beam) == Beam
+    assert window.user_beam.load_function != None
+    assert window.user_beam.bending_moment_function != None
+    assert window.user_beam.shear_force_function != None
+    assert window.user_beam.deflection_function != None
+    assert window.user_beam.free_body_diagram != None
+    window.user_beam.free_body_diagram.show()

@@ -15,7 +15,7 @@ from beamCalculator.Calculator.Support.PinSupport import PinSupport
 from beamCalculator.Calculator.Support.RollerSupport import RollerSupport
 
 
-class Beam(ABC):
+class Beam():
 
     def __init__(self, length, cross_section, material):
         self.length = length
@@ -62,10 +62,10 @@ class Beam(ABC):
         for support in supports:
             self.add_support(*support)
 
-    def set_load_function(self,function):
+    def set_load_function(self, function):
         self.load_function = function
 
-    def set_bending_moment_function(self,function):
+    def set_bending_moment_function(self, function):
         self.bending_moment_function = function
 
     def set_shear_force_function(self, function):

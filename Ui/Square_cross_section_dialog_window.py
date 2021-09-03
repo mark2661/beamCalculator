@@ -20,6 +20,7 @@ class Square_cross_section_dialog_window(QtWidgets.QDialog):
             if isVaildDimension(length):
                 self.cross_section_length = float(length)
                 self.user_cross_section = SquareCrossSection(self.cross_section_length)
+                self.close()
         except:
             showDialogErrorMessageBox()
             self.crossSectionLengthInputField.clear()

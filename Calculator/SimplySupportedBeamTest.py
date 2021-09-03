@@ -4,6 +4,7 @@ from beamCalculator.Calculator.Beam.CantileverdBeam import CantileveredBeam
 from beamCalculator.Calculator.Beam.SimplySupportedBeam import SimplySupportedBeam
 from beamCalculator.Calculator.CrossSection.SquareCrossSection import SquareCrossSection
 from beamCalculator.Calculator.Material.SteelAISI1045 import SteelAISI1045
+from beamCalculator.Calculator.Beam.Beam import Beam
 
 
 class MyTestCase(unittest.TestCase):
@@ -61,18 +62,24 @@ class MyTestCase(unittest.TestCase):
 
 
     def test_calculate(self):
-        test_beam = SimplySupportedBeam(1, SquareCrossSection(0.1), SteelAISI1045())
+        test_beam = Beam(1, SquareCrossSection(0.1), SteelAISI1045())
         test_beam.add_roller_support(0)
         test_beam.add_pin_support(1)
         test_beam.add_point_load(100,0.5)
         test_beam.calculate()
+
+        assert  test_beam.load_function != None
+        assert test_beam.bending_moment_function != None
+        assert test_beam.shear_force_function != None
+        assert test_beam.deflection_function != None
+        assert test_beam.free_body_diagram != None
 
 
     def test_cantilever_calculate(self):
         test_beam = CantileveredBeam(1, SquareCrossSection(0.1), SteelAISI1045())
         self.assertTrue(len(test_beam.supports) == 1)
         self.assertEqual(test_beam.supports[0].supportType, "fixed")
-        test_beam.add_point_load(1000,1)
+        test_beam.add_point_load(1000, 1)
         test_beam.calculate()
 
 

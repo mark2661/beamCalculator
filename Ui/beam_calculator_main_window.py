@@ -1,3 +1,5 @@
+import traceback
+
 from PyQt5 import QtWidgets, uic
 from beamCalculator.Ui.Add_beam_dialog_window import Add_beam_dialog_window
 from beamCalculator.Ui.Add_support_dialog_window import Add_support_dialog_window
@@ -27,12 +29,15 @@ class Window(QtWidgets.QMainWindow):
         self.user_beam_loads = []
         self.user_beam_supports = []
 
+        #Users beam object
+        self.user_beam = None
+
         #Define click event actions for buttons
         self.addBeamButton.clicked.connect(self.open_add_beam_window)
         self.addPointLoadButton.clicked.connect(self.open_add_pointLoad_window)
         self.addSupportButton.clicked.connect(self.open_add_support_window)
         self.crossSectionSelectionComboBox.currentIndexChanged.connect(self.open_cross_section_dialog_window)
-        self.solveButoon.clicked.connect(self.solve)
+        self.solveButton.clicked.connect(self.solve)
 
 
     def open_add_beam_window(self): #Group into one open_dialog_window function with a dialog.UiFiles parameter
@@ -45,7 +50,8 @@ class Window(QtWidgets.QMainWindow):
         dialog = Add_support_dialog_window()
         dialog.exec_()
         dialog.show()
-        if dialog.support_type and dialog.support_location:
+        if dialog.support_type is not None and dialog.support_location is not None:
+            print(dialog.support_type, dialog.support_location)
             self.user_beam_supports.append((dialog.support_type, dialog.support_location))
 
     def open_add_pointLoad_window(self):
@@ -82,21 +88,29 @@ class Window(QtWidgets.QMainWindow):
         pass
 
     def solve(self):
+        print(self.user_beam_length, self.user_beam_loads, self.user_beam_supports, self.user_beam_cross_section, self.get_selected_material())
         try:
-            self.isVaildBeamInput()
-            user_beam = Beam(self.user_beam_length, self.user_beam_cross_section, self.get_selected_material())
-            user_beam.set_supports(self.user_beam_supports)
-            user_beam.set_loads(self.user_beam_loads)
-            user_beam.calculate()
+            if self.isValidBeamInput():
+                self.user_beam = Beam(self.user_beam_length, self.user_beam_cross_section, self.get_selected_material())
+                self.user_beam.set_supports(self.user_beam_supports)
+                self.user_beam.set_loads(self.user_beam_loads)
+                print(list(n.location for n in self.user_beam.supports))
+                self.user_beam.calculate()
+                #self.user_beam.free_body_diagram.show()
+            else:
+                raise InvalidBeamInputException
         except:
+            traceback.print_exc()
             showDialogErrorMessageBox()
 
     def isValidBeamInput(self):
-        class InvalidBeamInputException(Exception):
-            pass
         if None in [self.user_beam_length, self.user_beam_cross_section, self.get_selected_material()] or len(self.user_beam_loads) == 0 or len(self.user_beam_supports) == 0:
-            raise InvalidBeamInputException
+            return False
+        return True
 
+
+class InvalidBeamInputException(Exception):
+    pass
 
 if __name__ == "__main__":
     import sys
