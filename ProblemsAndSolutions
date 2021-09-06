@@ -1,0 +1,3 @@
+p.sympybeam.calculate raises error when using decimal values for support locations
+    s. implemented a solution found here https://github.com/sympy/sympy/issues/20404. when sympy beam is imported the apply_supports method is
+       overridden with this new one

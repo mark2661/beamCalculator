@@ -82,6 +82,12 @@ class MyTestCase(unittest.TestCase):
         test_beam.add_point_load(1000, 1)
         test_beam.calculate()
 
+        assert test_beam.load_function != None
+        assert test_beam.bending_moment_function != None
+        assert test_beam.shear_force_function != None
+        assert test_beam.deflection_function != None
+        assert test_beam.free_body_diagram != None
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -7,9 +7,6 @@ from beamCalculator.Ui.Show_dialog_error_messgae_box import showDialogErrorMessa
 def isValidInputLength(length):
     return float(length) > 0
 
-class InputError(Exception):
-    print("input error")
-
 class Add_beam_dialog_window(QtWidgets.QDialog):
     def __init__(self):
         super(Add_beam_dialog_window, self).__init__()
@@ -21,7 +18,7 @@ class Add_beam_dialog_window(QtWidgets.QDialog):
     def get_dialog_data(self):
         try:
             length = self.BeamLengthInputField.text()
-            if isValidInputLength(length): #reject
+            if isValidInputLength(length):
                 self.inputted_beam_length = float(length)
                 self.close()
         except ValueError:

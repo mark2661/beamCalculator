@@ -6,6 +6,7 @@ from beamCalculator.Ui.Add_support_dialog_window import Add_support_dialog_windo
 from beamCalculator.Ui.Add_pointLoad_dialog_window import Add_pointLoad_dialog_window
 from beamCalculator.Ui.Rectangular_cross_section_dialog_window import Rectangular_cross_section_dialog_window
 from beamCalculator.Ui.Show_dialog_error_messgae_box import showDialogErrorMessageBox
+from beamCalculator.Ui.Solution_summary_dialog_window import Solution_summary_dialog_window
 from beamCalculator.Ui.Square_cross_section_dialog_window import Square_cross_section_dialog_window
 from beamCalculator.Calculator.Material.SteelAISI1045 import SteelAISI1045
 from beamCalculator.Calculator.Material.CastIronGrade20 import CastIronGrade20
@@ -51,7 +52,6 @@ class Window(QtWidgets.QMainWindow):
         dialog.exec_()
         dialog.show()
         if dialog.support_type is not None and dialog.support_location is not None:
-            print(dialog.support_type, dialog.support_location)
             self.user_beam_supports.append((dialog.support_type, dialog.support_location))
 
     def open_add_pointLoad_window(self):
@@ -78,6 +78,11 @@ class Window(QtWidgets.QMainWindow):
         dialog.show()
         self.user_beam_cross_section = dialog.get_user_cross_section()
 
+    def open_solution_summary_dialog_window(self):
+        dialog = Solution_summary_dialog_window(self.user_beam)
+        dialog.exec_()
+        dialog.show()
+
     def get_selected_material(self):
         try:
             return self.materialMappings[self.materialSelectionComboBox.currentIndex()]()
@@ -88,15 +93,13 @@ class Window(QtWidgets.QMainWindow):
         pass
 
     def solve(self):
-        print(self.user_beam_length, self.user_beam_loads, self.user_beam_supports, self.user_beam_cross_section, self.get_selected_material())
         try:
             if self.isValidBeamInput():
                 self.user_beam = Beam(self.user_beam_length, self.user_beam_cross_section, self.get_selected_material())
                 self.user_beam.set_supports(self.user_beam_supports)
                 self.user_beam.set_loads(self.user_beam_loads)
-                print(list(n.location for n in self.user_beam.supports))
                 self.user_beam.calculate()
-                #self.user_beam.free_body_diagram.show()
+                self.open_solution_summary_dialog_window()
             else:
                 raise InvalidBeamInputException
         except:

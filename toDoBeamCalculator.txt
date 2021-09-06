@@ -1,10 +1,9 @@
-0.test data trnasfer between Ui and Calculator
-1.display image as beam is updated
-2.error handling for incorrect inputs
-	2.1 display incorrectinput messgae
-	2.2 clear form and allow user to re-enter values
-5.allow user to update inputs (override existing values)
-6.Pull Git repo down
+#clean up redundant code
+#add a summary window feature for the solve button
+#write more robust test for the beam class
+#add reset button feature
+#make a main test class to run all test from
+
 
 
 Future Update

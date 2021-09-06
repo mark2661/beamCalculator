@@ -1,12 +1,13 @@
 from unittest import mock
 import pytest, time, concurrent.futures
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMessageBox, QDialog
 from beamCalculator.Calculator.CrossSection.RectangularCrossSection import RectangularCrossSection
 from beamCalculator.Calculator.CrossSection.SquareCrossSection import SquareCrossSection
 from beamCalculator.Calculator.Material.SteelAISI1045 import SteelAISI1045
 from beamCalculator.Ui.beam_calculator_main_window import Window
 from beamCalculator.Calculator.Beam.Beam import Beam
+from beamCalculator.Ui.Solution_summary_dialog_window import Solution_summary_dialog_window
 
 @pytest.fixture
 def window(qtbot):
@@ -224,10 +225,15 @@ def test_isValidBeamInput(inputtedBeamLength, inputtedBeamLoads, inputtedBeamSup
 @pytest.mark.parametrize(
     'inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial', [
         ('1', [("point", 100.0, 0.5)], [("pin", 0.0), ("roller", 1)], SquareCrossSection(0.1), SteelAISI1045), #correct input
+        (1.5, [("point", 100.0, 0.5)], [("pin", 0), ("pin", 1.45)], SquareCrossSection(0.1), SteelAISI1045)
         #(None, None) # NoneType input
     ]
 )
 def test_solve(inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial, window, qtbot):
+    def close_dialog_window():
+        time.sleep(5)
+        if type(QApplication.activeWindow()) is Solution_summary_dialog_window:
+            QApplication.activeWindow().close()
     #Arrage
     def mock_get_selected_material():
         return inputtedMaterial()
@@ -242,12 +248,16 @@ def test_solve(inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inpu
     window.user_beam_cross_section = inputtedBeamCrossSection
     assert window.user_beam == None
     #Action
+    executor = concurrent.futures.ThreadPoolExecutor().submit(close_dialog_window)
     qtbot.mouseClick(window.solveButton, QtCore.Qt.LeftButton)
     #Assert
     assert type(window.user_beam) == Beam
-    assert window.user_beam.load_function != None
-    assert window.user_beam.bending_moment_function != None
-    assert window.user_beam.shear_force_function != None
-    assert window.user_beam.deflection_function != None
-    assert window.user_beam.free_body_diagram != None
-    window.user_beam.free_body_diagram.show()
+    assert window.user_beam.sympy_beam != None
+    assert window.user_beam.maxBM != None
+    assert window.user_beam.maxSF != None
+    assert window.user_beam.maxDeflection != None
+
+
+    executor.cancel()
+
+

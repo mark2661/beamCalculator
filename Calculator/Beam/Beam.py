@@ -27,11 +27,16 @@ class Beam():
         self.udl = []
         self.supports = []
 
-        self.load_function = None
-        self.bending_moment_function = None
-        self.shear_force_function = None
-        self.deflection_function = None
-        self.free_body_diagram = None
+        # self.load_function = None
+        # self.bending_moment_function = None
+        # self.shear_force_function = None
+        # self.deflection_function = None
+        # self.free_body_diagram = None
+        self.sympy_beam = None
+
+        self.maxBM, self.maxBMLocation = None, None
+        self.maxSF, self.maxSFLocation = None, None
+        self.maxDeflection, self.maxDeflectionLocation = None, None
 
         self.load_mappings = {"point": self.add_point_load, "moment":self.add_moment, "udl":self.add_udl}
         self.support_mappings = {"pin":self.add_pin_support, "roller":self.add_roller_support, "fixed":self.add_fixed_support}
@@ -140,16 +145,26 @@ class Beam():
         I = self.cross_section.get_area_moment_of_inertia()
 
         beam = sympyBeam(self.length, E, I)
+        beam.apply_support = apply_support_fix
+
         self.apply_loads_to_sympy_beam_object(beam)
-        self.apply_supports_to_sympy_beam_object(beam)
+        #self.apply_supports_to_sympy_beam_object(beam)
         beam.solve_for_reaction_loads(*self.make_reaction_symbols_for_sympy_beam_object(beam))
 
 
-        self.set_load_function(beam.load)
-        self.set_bending_moment_function(beam.bending_moment())
-        self.set_shear_force_function(beam.shear_force())
-        self.set_deflection_function(beam.deflection())
-        self.set_free_body_diagram(beam.draw())
+        # self.set_load_function(beam.load)
+        # self.set_bending_moment_function(beam.bending_moment())
+        # self.set_shear_force_function(beam.shear_force())
+        # self.set_deflection_function(beam.deflection())
+        # self.set_free_body_diagram(beam.draw())
+
+
+        self.maxBM = beam.max_bmoment()[1]
+        self.maxSF = beam.max_shear_force()[1]
+        self.maxDeflection = beam.max_deflection()[1]
+        self.sympy_beam = beam
+
+
 
 
     def apply_loads_to_sympy_beam_object(self, beam):
@@ -162,20 +177,47 @@ class Beam():
         for udl in self.udl:
             beam.apply_load(udl.magnitude,udl.start_location,0, end=udl.end_location)
 
-    def apply_supports_to_sympy_beam_object(self, beam):
-        for support in self.supports:
-            beam.apply_support(support.location, support.supportType)
+    # def apply_supports_to_sympy_beam_object(self, beam):
+    #     for support in self.supports:
+    #         beam.apply_support(beam, support.location, support.supportType)
 
     def make_reaction_symbols_for_sympy_beam_object(self, beam):
         reaction_symbols = []
         for support in self.supports:
             if support.supportType == "fixed":
-                reaction_symbols.extend(symbols('R_{0},M_{0}'.format(support.location)))
+                symbl = symbols('R_{0}, M_{0}'.format(support.location))
+                reaction_symbols.extend(symbl)
+                beam.apply_support(beam, symbl, support.location, support.supportType)
             else:
-                reaction_symbols.append(symbols('R_{0}'.format(support.location)))
+                symbl = symbols('R_{0}'.format(support.location))
+                reaction_symbols.append(symbl)
+                beam.apply_support(beam, symbl, support.location, support.supportType)
         return reaction_symbols
 
 
+"""
+Code from GitHub used to fix the issue where sympy beams would not accept decimal values for support locations
+"""
+def apply_support_fix(self, syms, loc, type="fixed"):
+    try:
+        reaction_load,reaction_moment = syms
+    except:
+        try:
+            reaction_load, = syms
+        except:
+            reaction_load = syms
+    loc = sympify(loc)
+    self._applied_supports.append((loc, type))
+    if type == "pin" or type == "roller":
+        self.apply_load(reaction_load, loc, -1)
+        self.bc_deflection.append((loc, 0))
+    else:
+        self.apply_load(reaction_load, loc, -1)
+        self.apply_load(reaction_moment, loc, -2)
+        self.bc_deflection.append((loc, 0))
+        self.bc_slope.append((loc, 0))
+        self._support_as_loads.append((reaction_moment, loc, -2, None))
+    self._support_as_loads.append((reaction_load, loc, -1, None))
 
     """
     ** ABSTRACT METHODS **
