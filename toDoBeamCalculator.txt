@@ -1,9 +1,10 @@
 #clean up redundant code
-#add a summary window feature for the solve button
 #write more robust test for the beam class
 #add reset button feature
 #make a main test class to run all test from
 #fix max_bMoment function (potential bug)
+#bug in solution summary window, cannot close plot before pressing ok on dialog window also window reopens after clicking ok for the firs time
+#add reaction results to sumarry window
 
 
 

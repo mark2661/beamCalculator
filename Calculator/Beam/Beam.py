@@ -7,6 +7,8 @@ from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 from sympy.physics.continuum_mechanics.beam import Beam as sympyBeam
 from sympy import *
+from symbeam import beam as symbeamBeam
+import matplotlib.pyplot as plt
 from itertools import chain
 
 from beamCalculator.Calculator.Load.PointLoad import PointLoad
@@ -30,19 +32,16 @@ class Beam():
         self.udl = []
         self.supports = []
 
-        # self.load_function = None
-        # self.bending_moment_function = None
-        # self.shear_force_function = None
-        # self.deflection_function = None
-        # self.free_body_diagram = None
+
         self.sympy_beam = None
+        self.symbeam_beam = None
 
-        self.maxBM, self.maxBMLocation = None, None
-        self.maxSF, self.maxSFLocation = None, None
-        self.maxDeflection, self.maxDeflectionLocation = None, None
+        self.maxBM = None
+        self.maxSF = None
+        self.maxDeflection = None
 
-        self.load_mappings = {"point": self.add_point_load, "moment":self.add_moment, "udl":self.add_udl}
-        self.support_mappings = {"pin":self.add_pin_support, "roller":self.add_roller_support, "fixed":self.add_fixed_support}
+        self.load_mappings = {"point": self.add_point_load, "moment": self.add_moment, "udl": self.add_udl}
+        self.support_mappings = {"pin": self.add_pin_support, "roller": self.add_roller_support, "fixed": self.add_fixed_support}
 
     """
     ** GETTERS AND SETTERS **
@@ -147,27 +146,42 @@ class Beam():
         E = self.material.tensile_modulus
         I = self.cross_section.get_area_moment_of_inertia()
 
-        beam = sympyBeam(self.length, E, I)
-        beam.apply_support = apply_support_fix
-
-        self.apply_loads_to_sympy_beam_object(beam)
-        #self.apply_supports_to_sympy_beam_object(beam)
-        beam.solve_for_reaction_loads(*self.make_reaction_symbols_for_sympy_beam_object(beam))
-
-
-        # self.set_load_function(beam.load)
-        # self.set_bending_moment_function(beam.bending_moment())
-        # self.set_shear_force_function(beam.shear_force())
-        # self.set_deflection_function(beam.deflection())
-        # self.set_free_body_diagram(beam.draw())
+        #create sympy beam object
+        self.sympy_beam = sympyBeam(self.length, E, I)
+        self.sympy_beam.apply_support = apply_support_fix
+        self.apply_loads_to_sympy_beam_object(self.sympy_beam)
+        self.sympy_beam.solve_for_reaction_loads(*self.make_reaction_symbols_for_sympy_beam_object(self.sympy_beam))
 
 
-        self.sympy_beam = beam
-        self.maxBM = beam.max_bmoment()[1]
-        self.maxSF = beam.max_shear_force()[1]
-        self.maxDeflection = beam.max_deflection()[1]
+        #create symbeam object
+        self.symbeam_beam = symbeamBeam(self.length)
+        self.symbeam_beam.set_young(0, self.length, E)
+        self.symbeam_beam.set_inertia(0, self.length, I)
+        self.apply_supports_to_symbeamBeam_object()
+        self.apply_loads_to_symbeamBeam_object()
+        self.symbeam_beam.solve(output=False)
+        # self.symbeam_beam.plot()
+        # plt.show()
 
 
+        self.maxBM = self.sympy_beam.max_bmoment()[1]
+        self.maxSF = self.sympy_beam.max_shear_force()[1]
+        self.maxDeflection = self.sympy_beam.max_deflection()[1]
+
+
+    def apply_supports_to_symbeamBeam_object(self):
+        for support in self.supports:
+            self.symbeam_beam.add_support(support.location, support.supportType)
+
+    def apply_loads_to_symbeamBeam_object(self):
+        for load in self.point_loads:
+            self.symbeam_beam.add_point_load(load.start_location, load.magnitude)
+
+        for moment in self.moments:
+            self.symbeam_beam.add_point_moment(moment.start_location, moment.magnitude)
+
+        # for udl in self.udl:
+        #     self.symbeam_beam.apply_load(udl.magnitude, udl.start_location, 0, end=udl.end_location)
 
 
 

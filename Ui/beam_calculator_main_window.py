@@ -103,7 +103,7 @@ class Window(QtWidgets.QMainWindow):
             else:
                 raise InvalidBeamInputException
         except:
-            traceback.print_exc()
+            #traceback.print_exc()
             showDialogErrorMessageBox()
 
     def isValidBeamInput(self):

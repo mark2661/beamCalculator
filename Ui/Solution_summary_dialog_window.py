@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 
 class Solution_summary_dialog_window(QtWidgets.QDialog):
@@ -10,7 +11,7 @@ class Solution_summary_dialog_window(QtWidgets.QDialog):
         self.SFPlot_button.clicked.connect(self.show_SF_plot)
         self.DeflectionPlotButton.clicked.connect(self.show_Deflection_plot)
         self.FBDPlot_button.clicked.connect(self.show_FBD_plot)
-        #self.GenerateReport_button.clicked.connect()
+        self.GenerateReport_button.clicked.connect(self.generate_report)
 
         #set label text
         #self.maxBendingMomentLabel.setText(str(round(float(self.user_beam.maxBM), 2)))
@@ -31,4 +32,5 @@ class Solution_summary_dialog_window(QtWidgets.QDialog):
         self.user_beam.sympy_beam.plot_deflection()
 
     def generate_report(self):
-        pass
+        self.user_beam.symbeam_beam.plot()
+        plt.show()
