@@ -1,8 +1,10 @@
+import traceback
 from abc import ABC, abstractmethod
 
 #from BEAM.Load.Moment import Moment
 #from BEAM.Load.PointLoad import PointLoad
 #from BEAM.Load.UDL import UDL
+import matplotlib.pyplot as plt
 from sympy.physics.continuum_mechanics.beam import Beam as sympyBeam
 from sympy import *
 from itertools import chain
@@ -13,6 +15,7 @@ from beamCalculator.Calculator.Load.Moment import Moment
 from beamCalculator.Calculator.Support.FixedSupport import FixedSupport
 from beamCalculator.Calculator.Support.PinSupport import PinSupport
 from beamCalculator.Calculator.Support.RollerSupport import RollerSupport
+
 
 
 class Beam():
@@ -159,10 +162,11 @@ class Beam():
         # self.set_free_body_diagram(beam.draw())
 
 
+        self.sympy_beam = beam
         self.maxBM = beam.max_bmoment()[1]
         self.maxSF = beam.max_shear_force()[1]
         self.maxDeflection = beam.max_deflection()[1]
-        self.sympy_beam = beam
+
 
 
 
@@ -218,6 +222,9 @@ def apply_support_fix(self, syms, loc, type="fixed"):
         self.bc_slope.append((loc, 0))
         self._support_as_loads.append((reaction_moment, loc, -2, None))
     self._support_as_loads.append((reaction_load, loc, -1, None))
+
+
+
 
     """
     ** ABSTRACT METHODS **
