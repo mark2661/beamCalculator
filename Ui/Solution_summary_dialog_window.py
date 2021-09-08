@@ -6,6 +6,8 @@ class Solution_summary_dialog_window(QtWidgets.QDialog):
         super(Solution_summary_dialog_window, self).__init__()
         uic.loadUi("/home/mark/Desktop/Beam Calculator/beamCalculator/Ui/UiFiles/Solution_summary_dialog_window.ui", self)
         self.user_beam = user_beam
+
+        #Connect buttons to functions
         self.Ok_button.clicked.connect(self.close)
         self.BMPlot_button.clicked.connect(self.show_BM_plot)
         self.SFPlot_button.clicked.connect(self.show_SF_plot)

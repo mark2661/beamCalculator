@@ -5,6 +5,7 @@ from beamCalculator.Ui.Add_beam_dialog_window import Add_beam_dialog_window
 from beamCalculator.Ui.Add_support_dialog_window import Add_support_dialog_window
 from beamCalculator.Ui.Add_pointLoad_dialog_window import Add_pointLoad_dialog_window
 from beamCalculator.Ui.Rectangular_cross_section_dialog_window import Rectangular_cross_section_dialog_window
+from beamCalculator.Ui.Reset_dialog_window import Reset_dialog_window
 from beamCalculator.Ui.Show_dialog_error_messgae_box import showDialogErrorMessageBox
 from beamCalculator.Ui.Solution_summary_dialog_window import Solution_summary_dialog_window
 from beamCalculator.Ui.Square_cross_section_dialog_window import Square_cross_section_dialog_window
@@ -25,8 +26,8 @@ class Window(QtWidgets.QMainWindow):
         self.materialMappings = {0: None, 1: SteelAISI1045, 2: CastIronGrade20}
 
         #Properties of the users beam used for calculation
-        self.user_beam_cross_section = None
         self.user_beam_length = None
+        self.user_beam_cross_section = None
         self.user_beam_loads = []
         self.user_beam_supports = []
 
@@ -39,6 +40,30 @@ class Window(QtWidgets.QMainWindow):
         self.addSupportButton.clicked.connect(self.open_add_support_window)
         self.crossSectionSelectionComboBox.currentIndexChanged.connect(self.open_cross_section_dialog_window)
         self.solveButton.clicked.connect(self.solve)
+        self.resetButton.clicked.connect(self.open_reset_dialog_window)
+
+
+    def clear_user_beam_length(self):
+        self.user_beam_length = None
+
+    def clear_user_beam_cross_section(self):
+        self.user_beam_cross_section = None
+        self.crossSectionSelectionComboBox.setCurrentIndex(0)
+
+    def clear_user_beam_point_loads(self):
+        self.user_beam_loads = [l for l in self.user_beam_loads if l[0] != 'point']
+
+    def clear_user_beam_moments(self):
+        pass
+
+    def clear_user_beam_udl(self):
+        pass
+
+    def clear_user_beam_supports(self):
+        self.user_beam_supports.clear()
+
+    def clear_user_beam_material(self):
+        self.materialSelectionComboBox.setCurrentIndex(0)
 
 
     def open_add_beam_window(self): #Group into one open_dialog_window function with a dialog.UiFiles parameter
@@ -83,6 +108,11 @@ class Window(QtWidgets.QMainWindow):
         dialog.exec_()
         dialog.show()
 
+    def open_reset_dialog_window(self):
+        dialog = Reset_dialog_window(self)
+        dialog.exec_()
+        dialog.show()
+
     def get_selected_material(self):
         try:
             return self.materialMappings[self.materialSelectionComboBox.currentIndex()]()
@@ -105,6 +135,8 @@ class Window(QtWidgets.QMainWindow):
         except:
             #traceback.print_exc()
             showDialogErrorMessageBox()
+
+
 
     def isValidBeamInput(self):
         if None in [self.user_beam_length, self.user_beam_cross_section, self.get_selected_material()] or len(self.user_beam_loads) == 0 or len(self.user_beam_supports) == 0:

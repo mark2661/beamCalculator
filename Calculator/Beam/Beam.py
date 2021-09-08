@@ -84,6 +84,26 @@ class Beam():
     def set_free_body_diagram(self, plot_object):
         self.free_body_diagram = plot_object
 
+    def clear_length(self):
+        self.length = None
+
+    def clear_cross_section(self):
+        self.cross_section = None
+
+    def clear_material(self):
+        self.material = None
+
+    def clear_point_loads(self):
+        self.point_loads.clear()
+
+    def clear_moments(self):
+        self.moments.clear()
+
+    def clear_UDL(self):
+        self.udl.clear()
+
+    def clear_supports(self):
+        self.supports.clear()
 
     """
     ********************************
