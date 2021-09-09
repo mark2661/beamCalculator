@@ -225,7 +225,7 @@ def test_isValidBeamInput(inputtedBeamLength, inputtedBeamLoads, inputtedBeamSup
 @pytest.mark.parametrize(
     'inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial', [
         ('1', [("point", 100.0, 0.5)], [("pin", 0.0), ("roller", 1)], SquareCrossSection(0.1), SteelAISI1045), #correct input
-        (1.5, [("point", 100.0, 0.5)], [("pin", 0), ("pin", 1.45)], SquareCrossSection(0.1), SteelAISI1045)
+        ('1.5', [("point", 100.0, 0.5)], [("pin", 0.0), ("roller", 1)], SquareCrossSection(0.1), SteelAISI1045)
         #(None, None) # NoneType input
     ]
 )
@@ -253,7 +253,7 @@ def test_solve(inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inpu
     #Assert
     assert type(window.user_beam) == Beam
     assert window.user_beam.sympy_beam != None
-    assert window.user_beam.maxBM != None
+    #assert window.user_beam.maxBM != None
     assert window.user_beam.maxSF != None
     assert window.user_beam.maxDeflection != None
 
@@ -261,3 +261,176 @@ def test_solve(inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inpu
     executor.cancel()
 
 
+@pytest.mark.parametrize(
+    'inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial', [
+        ('1', [("point", 100.0, 0.5)], [("pin", 0.0), ("roller", 1)], SquareCrossSection(0.1), SteelAISI1045), #correct input
+        (1.5, [("point", 100.0, 0.5)], [("pin", 0), ("roller", 1.45)], SquareCrossSection(0.1), SteelAISI1045)
+        #(None, None) # NoneType input
+    ]
+)
+
+def test_clear_user_beam_length(inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial, window, qtbot):
+    def close_dialog_window():
+        time.sleep(5)
+        if type(QApplication.activeWindow()) is Solution_summary_dialog_window:
+            QApplication.activeWindow().close()
+    #Arrage
+    def mock_get_selected_material():
+        return inputtedMaterial()
+
+    #monkey path get_selected_material function
+    window.get_selected_material = mock_get_selected_material
+
+
+    window.user_beam_length = inputtedBeamLength
+    window.user_beam_loads = inputtedBeamLoads
+    window.user_beam_supports = inputtedBeamSupports
+    window.user_beam_cross_section = inputtedBeamCrossSection
+    assert window.user_beam == None
+    #Action
+    window.clear_user_beam_length()
+    #Assert
+    assert window.user_beam_length == None
+    assert window.user_beam_cross_section == inputtedBeamCrossSection
+    assert window.user_beam_loads == inputtedBeamLoads
+    assert window.user_beam_supports == inputtedBeamSupports
+
+
+@pytest.mark.parametrize(
+    'inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial', [
+        ('1', [("point", 100.0, 0.5)], [("pin", 0.0), ("roller", 1)], SquareCrossSection(0.1), SteelAISI1045), #correct input
+        (1.5, [("point", 100.0, 0.5)], [("pin", 0), ("roller", 1.45)], SquareCrossSection(0.1), SteelAISI1045)
+        #(None, None) # NoneType input
+    ]
+)
+def test_clear_user_beam_cross_section(inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial, window, qtbot):
+    def close_dialog_window():
+        time.sleep(5)
+        if type(QApplication.activeWindow()) is Solution_summary_dialog_window:
+            QApplication.activeWindow().close()
+    #Arrage
+    def mock_get_selected_material():
+        return inputtedMaterial()
+
+    #monkey path get_selected_material function
+    window.get_selected_material = mock_get_selected_material
+
+
+    window.user_beam_length = inputtedBeamLength
+    window.user_beam_loads = inputtedBeamLoads
+    window.user_beam_supports = inputtedBeamSupports
+    window.user_beam_cross_section = inputtedBeamCrossSection
+    assert window.user_beam == None
+    #Action
+    window.clear_user_beam_cross_section()
+    #Assert
+    assert window.user_beam_cross_section == None
+    assert window.crossSectionSelectionComboBox.currentIndex() == 0
+    assert window.user_beam_length == inputtedBeamLength
+    assert window.user_beam_loads == inputtedBeamLoads
+    assert window.user_beam_supports == inputtedBeamSupports
+
+@pytest.mark.parametrize(
+    'inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial', [
+        ('1', [("point", 100.0, 0.5)], [("pin", 0.0), ("roller", 1)], SquareCrossSection(0.1), SteelAISI1045), #correct input
+        (1.5, [("point", 100.0, 0.5)], [("pin", 0), ("roller", 1.45)], SquareCrossSection(0.1), SteelAISI1045)
+        #(None, None) # NoneType input
+    ]
+)
+def test_clear_user_beam_point_loads(inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial, window, qtbot):
+    def close_dialog_window():
+        time.sleep(5)
+        if type(QApplication.activeWindow()) is Solution_summary_dialog_window:
+            QApplication.activeWindow().close()
+    #Arrage
+    def mock_get_selected_material():
+        return inputtedMaterial()
+
+    #monkey path get_selected_material function
+    window.get_selected_material = mock_get_selected_material
+
+
+    window.user_beam_length = inputtedBeamLength
+    window.user_beam_loads = inputtedBeamLoads
+    window.user_beam_supports = inputtedBeamSupports
+    window.user_beam_cross_section = inputtedBeamCrossSection
+    assert window.user_beam == None
+    #Action
+    window.clear_user_beam_point_loads()
+    #Assert
+    for load in window.user_beam_loads:
+        assert load[0] != 'point'
+
+    assert window.crossSectionSelectionComboBox.currentIndex() == 0
+    assert window.user_beam_length == inputtedBeamLength
+    assert window.user_beam_cross_section == inputtedBeamCrossSection
+    assert window.user_beam_supports == inputtedBeamSupports
+
+@pytest.mark.parametrize(
+    'inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial', [
+        ('1', [("point", 100.0, 0.5)], [("pin", 0.0), ("roller", 1)], SquareCrossSection(0.1), SteelAISI1045), #correct input
+        (1.5, [("point", 100.0, 0.5)], [("pin", 0), ("roller", 1.45)], SquareCrossSection(0.1), SteelAISI1045)
+        #(None, None) # NoneType input
+    ]
+)
+def test_clear_user_beam_supports(inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial, window, qtbot):
+    def close_dialog_window():
+        time.sleep(5)
+        if type(QApplication.activeWindow()) is Solution_summary_dialog_window:
+            QApplication.activeWindow().close()
+    #Arrage
+    def mock_get_selected_material():
+        return inputtedMaterial()
+
+    #monkey path get_selected_material function
+    window.get_selected_material = mock_get_selected_material
+
+
+    window.user_beam_length = inputtedBeamLength
+    window.user_beam_loads = inputtedBeamLoads
+    window.user_beam_supports = inputtedBeamSupports
+    window.user_beam_cross_section = inputtedBeamCrossSection
+    assert window.user_beam == None
+    #Action
+    window.clear_user_beam_supports()
+    #Assert
+    assert window.user_beam_supports == []
+    assert window.user_beam_length == inputtedBeamLength
+    assert window.user_beam_loads == inputtedBeamLoads
+    assert window.user_beam_cross_section == inputtedBeamCrossSection
+
+@pytest.mark.parametrize(
+    'inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial', [
+        ('1', [("point", 100.0, 0.5)], [("pin", 0.0), ("roller", 1)], SquareCrossSection(0.1), SteelAISI1045), #correct input
+        (1.5, [("point", 100.0, 0.5)], [("pin", 0), ("roller", 1.45)], SquareCrossSection(0.1), SteelAISI1045)
+        #(None, None) # NoneType input
+    ]
+)
+def test_clear_user_beam_supports(inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial, window, qtbot):
+    def close_dialog_window():
+        time.sleep(5)
+        if type(QApplication.activeWindow()) is Solution_summary_dialog_window:
+            QApplication.activeWindow().close()
+    #Arrage
+    def mock_get_selected_material():
+        return inputtedMaterial()
+
+    #monkey path get_selected_material function
+    window.get_selected_material = mock_get_selected_material
+
+
+    window.user_beam_length = inputtedBeamLength
+    window.user_beam_loads = inputtedBeamLoads
+    window.user_beam_supports = inputtedBeamSupports
+    window.user_beam_cross_section = inputtedBeamCrossSection
+    assert window.user_beam == None
+    #Action
+    qtbot.keyClicks(window.materialSelectionComboBox, "Steel")
+    assert window.materialSelectionComboBox.currentIndex() == 1
+    window.clear_user_beam_material()
+    #Assert
+    assert window.materialSelectionComboBox.currentIndex() == 0
+    assert window.user_beam_supports == inputtedBeamSupports
+    assert window.user_beam_length == inputtedBeamLength
+    assert window.user_beam_loads == inputtedBeamLoads
+    assert window.user_beam_cross_section == inputtedBeamCrossSection

@@ -5,6 +5,7 @@ class Solution_summary_dialog_window(QtWidgets.QDialog):
     def __init__(self, user_beam):
         super(Solution_summary_dialog_window, self).__init__()
         uic.loadUi("/home/mark/Desktop/Beam Calculator/beamCalculator/Ui/UiFiles/Solution_summary_dialog_window.ui", self)
+        self.setWindowModality()
         self.user_beam = user_beam
 
         #Connect buttons to functions

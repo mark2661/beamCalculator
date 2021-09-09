@@ -189,6 +189,7 @@ class Beam():
         self.maxDeflection = self.sympy_beam.max_deflection()[1]
 
 
+
     def apply_supports_to_symbeamBeam_object(self):
         for support in self.supports:
             self.symbeam_beam.add_support(support.location, support.supportType)

@@ -69,13 +69,13 @@ class Window(QtWidgets.QMainWindow):
     def open_add_beam_window(self): #Group into one open_dialog_window function with a dialog.UiFiles parameter
         dialog = Add_beam_dialog_window()
         dialog.exec_()
-        dialog.show()
+        #dialog.show()
         self.user_beam_length = dialog.inputted_beam_length
 
     def open_add_support_window(self):
         dialog = Add_support_dialog_window()
         dialog.exec_()
-        dialog.show()
+        #dialog.show()
         if dialog.support_type is not None and dialog.support_location is not None:
             self.user_beam_supports.append((dialog.support_type, dialog.support_location))
 
@@ -88,7 +88,8 @@ class Window(QtWidgets.QMainWindow):
 
     def open_cross_section_dialog_window(self):
         idx = self.crossSectionSelectionComboBox.currentIndex()
-        self.crossSectionComboBoxDialogWindowMappings[idx]()
+        if idx != 0:
+            self.crossSectionComboBoxDialogWindowMappings[idx]()
 
 
     def open_rectangular_cross_section_dialog_window(self):
@@ -104,13 +105,14 @@ class Window(QtWidgets.QMainWindow):
         self.user_beam_cross_section = dialog.get_user_cross_section()
 
     def open_solution_summary_dialog_window(self):
-        dialog = Solution_summary_dialog_window(self.user_beam)
-        dialog.exec_()
-        dialog.show()
+        Solution_summary_dialog_window(self.user_beam).open()
+        # dialog = Solution_summary_dialog_window(self.user_beam)
+        #dialog.exec_() #need this uncommented for function to work
+        # dialog.show()
 
     def open_reset_dialog_window(self):
         dialog = Reset_dialog_window(self)
-        dialog.exec_()
+        #dialog.exec_() #need this uncommented for function to work
         dialog.show()
 
     def get_selected_material(self):
@@ -133,7 +135,7 @@ class Window(QtWidgets.QMainWindow):
             else:
                 raise InvalidBeamInputException
         except:
-            #traceback.print_exc()
+            traceback.print_exc()
             showDialogErrorMessageBox()
 
 
