@@ -53,6 +53,9 @@ class TestAddPointLoadDialogWindow:
 
         executor.cancel()  # close the thread
 
+def main():
+    TestAddPointLoadDialogWindow()
+
 if __name__ == "__main__":
-    test = TestAddPointLoadDialogWindow()
-    test.test_get_dialog_data
+    main()
+

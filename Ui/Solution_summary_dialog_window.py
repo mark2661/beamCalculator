@@ -5,7 +5,6 @@ class Solution_summary_dialog_window(QtWidgets.QDialog):
     def __init__(self, user_beam):
         super(Solution_summary_dialog_window, self).__init__()
         uic.loadUi("/home/mark/Desktop/Beam Calculator/beamCalculator/Ui/UiFiles/Solution_summary_dialog_window.ui", self)
-        self.setWindowModality()
         self.user_beam = user_beam
 
         #Connect buttons to functions
@@ -17,6 +16,7 @@ class Solution_summary_dialog_window(QtWidgets.QDialog):
         self.GenerateReport_button.clicked.connect(self.generate_report)
 
         #set label text
+        self.supportReactionsLabel.setText(self.format_support_reaction_text())
         #self.maxBendingMomentLabel.setText(str(round(float(self.user_beam.maxBM), 2)))
         self.maxShearForceLabel.setText(str(round(float(self.user_beam.maxSF), 2)))
         self.maxDeflectionLabel.setText(str(round(float(self.user_beam.maxDeflection), 2)))
@@ -37,3 +37,11 @@ class Solution_summary_dialog_window(QtWidgets.QDialog):
     def generate_report(self):
         self.user_beam.symbeam_beam.plot()
         plt.show()
+
+    def format_support_reaction_text(self):
+        reactions = self.user_beam.sympy_beam.reaction_loads
+        formatted_reactions_txt = ""
+        for location in reactions.keys():
+            formatted_reactions_txt += str(location) + " = " + (str(round(float(reactions[location]), 2))) + ", "
+        return formatted_reactions_txt[:-2] #slicing to remove trailing comma and space chars
+
