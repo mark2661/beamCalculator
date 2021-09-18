@@ -187,7 +187,7 @@ class Beam():
         self.maxBM = self.sympy_beam.max_bmoment()[1]
         self.maxSF = self.sympy_beam.max_shear_force()[1]
         self.maxDeflection = self.sympy_beam.max_deflection()[1]
-        print(self.sympy_beam.reaction_loads)
+        #print(self.sympy_beam.reaction_loads)
 
 
 

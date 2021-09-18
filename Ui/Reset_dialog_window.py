@@ -27,7 +27,7 @@ class Reset_dialog_window(QtWidgets.QDialog):
         self.mainWindow.clear_user_beam_point_loads()
 
     def resetMoments(self):
-        pass
+        self.mainWindow.clear_user_beam_moments()
 
     def resetUDL(self):
         pass

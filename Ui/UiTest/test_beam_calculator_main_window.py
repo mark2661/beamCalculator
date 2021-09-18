@@ -97,6 +97,36 @@ class TestBeamCalculatorMainWindow:
             qtbot.mouseClick(window.addPointLoadButton, QtCore.Qt.LeftButton)
             assert window.user_beam_loads == expectedResult
 
+
+    @pytest.mark.parametrize(
+        'inputtedDirection, inputtedLoadMagnitude, inputtedLoadLocation, expectedResult', [
+            ('ACW', '100', '100',[('moment', -100.0, 100.0)]), #int input
+            #('Up',None, None, []) # NoneType input
+        ]
+    )
+    def test_open_add_moment_window(self, inputtedDirection, inputtedLoadMagnitude, inputtedLoadLocation, expectedResult, window, qtbot):
+        class MockAddMomentWindow(object):
+            def __init__(self, inputtedDirection, inputtedLoadMagnitude, inputtedLoadLocation):
+                self.inputted_load_direction = 1 if inputtedDirection == "CW" else -1
+                try:
+                    self.inputted_load_magnitude = float(inputtedLoadMagnitude)
+                    self.inputted_load_location = float(inputtedLoadLocation)
+                    self.inputted_load_magnitude *= self.inputted_load_direction
+                except:
+                    self.inputted_load_magnitude = self.inputted_load_location = None
+
+            def exec_(self):
+                pass
+
+            def show(self):
+                pass
+
+        with mock.patch('beamCalculator.Ui.beam_calculator_main_window.Add_moment_dialog_window', return_value=MockAddMomentWindow(inputtedDirection, inputtedLoadMagnitude, inputtedLoadLocation)):
+            #Action
+            qtbot.mouseClick(window.addMomentButton, QtCore.Qt.LeftButton)
+            assert window.user_beam_loads == expectedResult
+
+
     @pytest.mark.parametrize(
         'inputtedWidth, inputtedLength, expectedResultType, expectedResultWidth, expectedResultLength', [
             ('100.0', '100.0', RectangularCrossSection(100.0,100.0), 100.0, 100.0), #correct input
@@ -333,8 +363,8 @@ class TestBeamCalculatorMainWindow:
 
     @pytest.mark.parametrize(
         'inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial', [
-            ('1', [("point", 100.0, 0.5)], [("pin", 0.0), ("roller", 1)], SquareCrossSection(0.1), SteelAISI1045), #correct input
-            (1.5, [("point", 100.0, 0.5)], [("pin", 0), ("roller", 1.45)], SquareCrossSection(0.1), SteelAISI1045)
+            ('1', [("point", 100.0, 0.5), ("moment", 100.0, 0.5)], [("pin", 0.0), ("roller", 1)], SquareCrossSection(0.1), SteelAISI1045), #correct input
+            (1.5, [("point", 100.0, 0.5), ("moment", 100.0, 0.5)], [("pin", 0), ("roller", 1.45)], SquareCrossSection(0.1), SteelAISI1045)
             #(None, None) # NoneType input
         ]
     )
@@ -359,6 +389,7 @@ class TestBeamCalculatorMainWindow:
         #Action
         window.clear_user_beam_point_loads()
         #Assert
+        assert len(window.user_beam_loads) > 0
         for load in window.user_beam_loads:
             assert load[0] != 'point'
 
@@ -366,6 +397,44 @@ class TestBeamCalculatorMainWindow:
         assert window.user_beam_length == inputtedBeamLength
         assert window.user_beam_cross_section == inputtedBeamCrossSection
         assert window.user_beam_supports == inputtedBeamSupports
+
+    @pytest.mark.parametrize(
+        'inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial', [
+            ('1', [("point", 100.0, 0.5), ("moment", 100.0, 0.5)], [("pin", 0.0), ("roller", 1)], SquareCrossSection(0.1), SteelAISI1045), #correct input
+            (1.5, [("point", 100.0, 0.5), ("moment", 100.0, 0.5)], [("pin", 0), ("roller", 1.45)], SquareCrossSection(0.1), SteelAISI1045)
+            #(None, None) # NoneType input
+        ]
+    )
+    def test_clear_user_beam_moments(self, inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial, window, qtbot):
+        def close_dialog_window():
+            time.sleep(5)
+            if type(QApplication.activeWindow()) is Solution_summary_dialog_window:
+                QApplication.activeWindow().close()
+        #Arrage
+        def mock_get_selected_material():
+            return inputtedMaterial()
+
+        #monkey path get_selected_material function
+        window.get_selected_material = mock_get_selected_material
+
+
+        window.user_beam_length = inputtedBeamLength
+        window.user_beam_loads = inputtedBeamLoads
+        window.user_beam_supports = inputtedBeamSupports
+        window.user_beam_cross_section = inputtedBeamCrossSection
+        assert window.user_beam == None
+        #Action
+        window.clear_user_beam_moments()
+        #Assert
+        assert len(window.user_beam_loads) > 0
+        for load in window.user_beam_loads:
+            assert load[0] != 'moment'
+
+        assert window.crossSectionSelectionComboBox.currentIndex() == 0
+        assert window.user_beam_length == inputtedBeamLength
+        assert window.user_beam_cross_section == inputtedBeamCrossSection
+        assert window.user_beam_supports == inputtedBeamSupports
+
 
     @pytest.mark.parametrize(
         'inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial', [

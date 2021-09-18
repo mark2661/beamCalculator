@@ -1,3 +1,4 @@
+#go through and comment files properly explaining what all functions do
 #clean up redundant code
 #write more robust test for the beam class
 #fix max_bMoment function (potential bug)
@@ -5,12 +6,16 @@
 #Add moment functionality *** currently working on
     #Create add moment dialog window (check)
     #write .py file for dialog window
-        #Link button click events to functions
-        #write test for the dialog window
+        #Link button click events to functions (check)
+        #write test for the dialog window (check)
     #write functions for moment dialog in main_window.py
-        #open moment dialog window function
-        #store data in user_beam_loads class variable
+        #open moment dialog window function (check)
+        #store data in user_beam_loads class variable (check)
+        #up main_window test to include test for add moment (check)
+        #update clear function in main window and reset dialog window to include moment functionality (check)
+        #update test for clear functions to include moments (check)
     #write functions to handle moments in Beam.py
+        #update beam test to include examples with moments
 
 #Add UDL functionality
 #Add length unit selection functionality

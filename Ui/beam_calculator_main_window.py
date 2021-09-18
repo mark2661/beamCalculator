@@ -2,6 +2,7 @@ import traceback
 
 from PyQt5 import QtWidgets, uic, Qt
 from beamCalculator.Ui.Add_beam_dialog_window import Add_beam_dialog_window
+from beamCalculator.Ui.Add_moment_dialog_window import Add_moment_dialog_window
 from beamCalculator.Ui.Add_support_dialog_window import Add_support_dialog_window
 from beamCalculator.Ui.Add_pointLoad_dialog_window import Add_pointLoad_dialog_window
 from beamCalculator.Ui.Rectangular_cross_section_dialog_window import Rectangular_cross_section_dialog_window
@@ -36,8 +37,9 @@ class Window(QtWidgets.QMainWindow):
 
         #Define click event actions for buttons
         self.addBeamButton.clicked.connect(self.open_add_beam_window)
-        self.addPointLoadButton.clicked.connect(self.open_add_pointLoad_window)
         self.addSupportButton.clicked.connect(self.open_add_support_window)
+        self.addPointLoadButton.clicked.connect(self.open_add_pointLoad_window)
+        self.addMomentButton.clicked.connect(self.open_add_moment_window)
         self.crossSectionSelectionComboBox.currentIndexChanged.connect(self.open_cross_section_dialog_window)
         self.solveButton.clicked.connect(self.solve)
         self.resetButton.clicked.connect(self.open_reset_dialog_window)
@@ -54,7 +56,7 @@ class Window(QtWidgets.QMainWindow):
         self.user_beam_loads = [l for l in self.user_beam_loads if l[0] != 'point']
 
     def clear_user_beam_moments(self):
-        pass
+        self.user_beam_loads = [l for l in self.user_beam_loads if l[0] != 'moment']
 
     def clear_user_beam_udl(self):
         pass
@@ -82,6 +84,13 @@ class Window(QtWidgets.QMainWindow):
         self.dialog.exec_()
         if self.dialog.inputted_load_location and self.dialog.inputted_load_magnitude:
             self.user_beam_loads.append(("point", self.dialog.inputted_load_magnitude, self.dialog.inputted_load_location))
+
+    def open_add_moment_window(self):
+        self.dialog = Add_moment_dialog_window()
+        self.dialog.exec_()
+        if self.dialog.inputted_load_location and self.dialog.inputted_load_magnitude:
+            self.user_beam_loads.append(("moment", self.dialog.inputted_load_magnitude, self.dialog.inputted_load_location))
+
 
     def open_cross_section_dialog_window(self):
         idx = self.crossSectionSelectionComboBox.currentIndex()
