@@ -19,8 +19,8 @@ class Add_pointLoad_dialog_window(QtWidgets.QDialog):
         self.inputted_load_direction = self.inputted_load_magnitude = self.inputted_load_location = None
 
     def get_dialog_data(self):
-        #self.inputted_load_direction = 1 if self.loadDirectionComboBox.currentText() == "Up" else -1
-        self.inputted_load_direction = 1 if self.loadDirectionComboBox.currentText() == "Down" else -1
+        self.inputted_load_direction = 1 if self.loadDirectionComboBox.currentText() == "Up" else -1
+        #self.inputted_load_direction = 1 if self.loadDirectionComboBox.currentText() == "Down" else -1
         try:
             magnitude, location = self.loadMagnitudeInputField.text(), self.loadLocationInputField.text()
             if isValidLoadMagnitude(magnitude) and isValidLoadLocation(location):

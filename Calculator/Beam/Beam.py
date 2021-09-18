@@ -197,8 +197,8 @@ class Beam():
 
     def apply_loads_to_symbeamBeam_object(self):
         for load in self.point_loads:
-            #self.symbeam_beam.add_point_load(load.start_location, load.magnitude)
-            self.symbeam_beam.add_point_load(load.start_location, -1 * load.magnitude) #negative magnitude to coreect for differences in sign convention between the two modules
+            self.symbeam_beam.add_point_load(load.start_location, load.magnitude)
+            #self.symbeam_beam.add_point_load(load.start_location, -1 * load.magnitude) #negative magnitude to coreect for differences in sign convention between the two modules
 
         for moment in self.moments:
             self.symbeam_beam.add_point_moment(moment.start_location, moment.magnitude)

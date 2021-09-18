@@ -1,7 +1,23 @@
 #clean up redundant code
 #write more robust test for the beam class
 #fix max_bMoment function (potential bug)
-#add reaction results to summary window
+
+#Add moment functionality *** currently working on
+    #Create add moment dialog window (check)
+    #write .py file for dialog window
+        #Link button click events to functions
+        #write test for the dialog window
+    #write functions for moment dialog in main_window.py
+        #open moment dialog window function
+        #store data in user_beam_loads class variable
+    #write functions to handle moments in Beam.py
+
+#Add UDL functionality
+#Add length unit selection functionality
+#Add force unit selection functionality
+#Fix sign convention differences between the two lib
+    #Fix broken test cases (new unit convention)
+
 
 
 
