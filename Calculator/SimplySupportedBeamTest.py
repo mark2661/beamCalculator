@@ -65,14 +65,23 @@ class MyTestCase(unittest.TestCase):
         test_beam = Beam(1, SquareCrossSection(0.1), SteelAISI1045())
         test_beam.add_roller_support(0)
         test_beam.add_pin_support(1)
-        test_beam.add_point_load(100,0.5)
+        test_beam.add_point_load(100, 0.5)
+        test_beam.add_moment(-100, 0.1)
+
+        assert test_beam.sympy_beam == None
+        assert test_beam.symbeam_beam == None
+        assert test_beam.maxBM == None
+        assert test_beam.maxSF == None
+        assert test_beam.maxDeflection == None
+
         test_beam.calculate()
 
-        assert  test_beam.load_function != None
-        assert test_beam.bending_moment_function != None
-        assert test_beam.shear_force_function != None
-        assert test_beam.deflection_function != None
-        assert test_beam.free_body_diagram != None
+        assert test_beam.sympy_beam != None
+        assert test_beam.symbeam_beam != None
+        assert test_beam.maxBM != None
+        assert test_beam.maxSF != None
+        assert test_beam.maxDeflection != None
+
 
 
     def test_cantilever_calculate(self):
