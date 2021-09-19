@@ -3,21 +3,20 @@
 #write more robust test for the beam class
 #fix max_bMoment function (potential bug)
 
-#Add moment functionality *** currently working on
-    #Create add moment dialog window (check)
+#Add UDL functionality
+    #Create add UDL dialog window (check)
     #write .py file for dialog window
         #Link button click events to functions (check)
         #write test for the dialog window (check)
-    #write functions for moment dialog in main_window.py
+    #write functions for UDL dialog in main_window.py
         #open moment dialog window function (check)
         #store data in user_beam_loads class variable (check)
-        #up main_window test to include test for add moment (check)
-        #update clear function in main window and reset dialog window to include moment functionality (check)
-        #update test for clear functions to include moments (check)
+        #up main_window test to include test for add UDL (check)
+        #update clear function in main window and reset dialog window to include UDL functionality
+        #update test for clear functions to include UDL
     #write functions to handle moments in Beam.py
-        #update beam test to include examples with moments
+        #update beam test to include examples with UDL
 
-#Add UDL functionality
 #Add length unit selection functionality
 #Add force unit selection functionality
 #Fix sign convention differences between the two lib
@@ -28,4 +27,4 @@
 
 
 Future Update
-1. link buttons for moments, units, e.t.c..
+1. Add functionality to draw beam as user is creating it.

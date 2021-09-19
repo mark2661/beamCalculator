@@ -126,6 +126,43 @@ class TestBeamCalculatorMainWindow:
             qtbot.mouseClick(window.addMomentButton, QtCore.Qt.LeftButton)
             assert window.user_beam_loads == expectedResult
 
+    @pytest.mark.parametrize(
+        'inputtedDirection, inputtedLoadMagnitudeValue, inputtedLoadStartLocation, inputtedLoadEndLocation, inputtedLoadOrder, expectedResult', [
+            ('Down', '100', '0.5', '1', '0', [('udl', -100.0, 0.5, 1, 0)]), #int input
+            ('Up',None, '0.5', '1', '0', []), # NoneType input
+            ('Up', '100', None, '1', '0', []),
+            ('Up', '100', '0.5', None, '0', []),
+            ('Up', '100', '0.5', '1', None, [])
+
+        ]
+    )
+    def test_open_add_udl_window(self, inputtedDirection, inputtedLoadMagnitudeValue, inputtedLoadStartLocation, inputtedLoadEndLocation, inputtedLoadOrder, expectedResult, window, qtbot):
+        class MockAddUDLWindow(object):
+            def __init__(self, inputtedDirection, inputtedLoadMagnitudeValue, inputtedLoadStartLocation, inputtedLoadEndLocation, inputtedLoadOrder):
+                self.inputted_load_direction = 1 if inputtedDirection == "Up" else -1
+                try:
+                    self.inputted_load_magnitude = float(inputtedLoadMagnitudeValue)
+                    self.inputted_load_start_location = float(inputtedLoadStartLocation)
+                    self.inputted_load_end_location = float(inputtedLoadEndLocation)
+                    self.inputted_load_order = int(inputtedLoadOrder)
+                    self.inputted_load_magnitude *= self.inputted_load_direction
+                except:
+                    self.inputted_load_magnitude = None
+                    self.inputted_load_start_location = None
+                    self.inputted_load_end_location = None
+                    self.inputted_load_order = None
+
+            def exec_(self):
+                pass
+
+            def show(self):
+                pass
+
+        with mock.patch('beamCalculator.Ui.beam_calculator_main_window.Add_UDL_dialog_window', return_value=MockAddUDLWindow(inputtedDirection, inputtedLoadMagnitudeValue, inputtedLoadStartLocation, inputtedLoadEndLocation, inputtedLoadOrder)):
+            #Action
+            qtbot.mouseClick(window.addUDLButton, QtCore.Qt.LeftButton)
+            assert window.user_beam_loads == expectedResult
+
 
     @pytest.mark.parametrize(
         'inputtedWidth, inputtedLength, expectedResultType, expectedResultWidth, expectedResultLength', [
@@ -476,7 +513,7 @@ class TestBeamCalculatorMainWindow:
             #(None, None) # NoneType input
         ]
     )
-    def test_clear_user_beam_supports(self, inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial, window, qtbot):
+    def test_clear_user_beam_material(self, inputtedBeamLength, inputtedBeamLoads, inputtedBeamSupports, inputtedBeamCrossSection, inputtedMaterial, window, qtbot):
         def close_dialog_window():
             time.sleep(5)
             if type(QApplication.activeWindow()) is Solution_summary_dialog_window:

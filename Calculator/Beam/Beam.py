@@ -124,9 +124,9 @@ class Beam():
         new_moment = Moment(magnitude,location)
         self.moments.append(new_moment)
 
-    def add_udl(self,magnitude,start_location,end_location):
-        new_udl = UDL(magnitude,start_location, end_location)
-        self.moments.append(new_udl)
+    def add_udl(self,magnitude,start_location,end_location, order = 0):
+        new_udl = UDL(magnitude,start_location, end_location, order)
+        self.udl.append(new_udl)
 
     def clear_loads(self):
         self.point_loads.clear()
@@ -216,7 +216,7 @@ class Beam():
             beam.apply_load(moment.magnitude, moment.start_location, -2)
 
         for udl in self.udl:
-            beam.apply_load(udl.magnitude,udl.start_location,0, end=udl.end_location)
+            beam.apply_load(udl.magnitude, udl.start_location, udl.order, end=udl.end_location)
 
     # def apply_supports_to_sympy_beam_object(self, beam):
     #     for support in self.supports:

@@ -1,6 +1,8 @@
 import traceback
 
 from PyQt5 import QtWidgets, uic, Qt
+
+from beamCalculator.Ui.Add_UDL_dialog_window import Add_UDL_dialog_window
 from beamCalculator.Ui.Add_beam_dialog_window import Add_beam_dialog_window
 from beamCalculator.Ui.Add_moment_dialog_window import Add_moment_dialog_window
 from beamCalculator.Ui.Add_support_dialog_window import Add_support_dialog_window
@@ -40,6 +42,7 @@ class Window(QtWidgets.QMainWindow):
         self.addSupportButton.clicked.connect(self.open_add_support_window)
         self.addPointLoadButton.clicked.connect(self.open_add_pointLoad_window)
         self.addMomentButton.clicked.connect(self.open_add_moment_window)
+        self.addUDLButton.clicked.connect(self.open_add_udl_window)
         self.crossSectionSelectionComboBox.currentIndexChanged.connect(self.open_cross_section_dialog_window)
         self.solveButton.clicked.connect(self.solve)
         self.resetButton.clicked.connect(self.open_reset_dialog_window)
@@ -59,7 +62,7 @@ class Window(QtWidgets.QMainWindow):
         self.user_beam_loads = [l for l in self.user_beam_loads if l[0] != 'moment']
 
     def clear_user_beam_udl(self):
-        pass
+        self.user_beam_loads = [l for l in self.user_beam_loads if l[0] != 'udl']
 
     def clear_user_beam_supports(self):
         self.user_beam_supports.clear()
@@ -76,27 +79,32 @@ class Window(QtWidgets.QMainWindow):
     def open_add_support_window(self):
         self.dialog = Add_support_dialog_window()
         self.dialog.exec_()
-        if self.dialog.support_type is not None and self.dialog.support_location is not None:
+        if isAllSupportDataPresent(self.dialog):
             self.user_beam_supports.append((self.dialog.support_type, self.dialog.support_location))
 
     def open_add_pointLoad_window(self):
         self.dialog = Add_pointLoad_dialog_window()
         self.dialog.exec_()
-        if self.dialog.inputted_load_location and self.dialog.inputted_load_magnitude:
+        if isAllPointLoadDialogDataPresent(self.dialog):
             self.user_beam_loads.append(("point", self.dialog.inputted_load_magnitude, self.dialog.inputted_load_location))
 
     def open_add_moment_window(self):
         self.dialog = Add_moment_dialog_window()
         self.dialog.exec_()
-        if self.dialog.inputted_load_location and self.dialog.inputted_load_magnitude:
+        if isAllMomentDialogDataPresent(self.dialog):
             self.user_beam_loads.append(("moment", self.dialog.inputted_load_magnitude, self.dialog.inputted_load_location))
 
+    def open_add_udl_window(self):
+        self.dialog = Add_UDL_dialog_window()
+        self.dialog.exec_()
+        if isAllUDLDialogWindowDataPresent(self.dialog):
+            print("here")
+            self.user_beam_loads.append(("udl", self.dialog.inputted_load_magnitude, self.dialog.inputted_load_start_location, self.dialog.inputted_load_end_location, self.dialog.inputted_load_order))
 
     def open_cross_section_dialog_window(self):
         idx = self.crossSectionSelectionComboBox.currentIndex()
         if idx != 0:
             self.crossSectionComboBoxDialogWindowMappings[idx]()
-
 
     def open_rectangular_cross_section_dialog_window(self):
         self.dialog = Rectangular_cross_section_dialog_window()
@@ -115,7 +123,6 @@ class Window(QtWidgets.QMainWindow):
     def open_reset_dialog_window(self):
         self.dialog = Reset_dialog_window(self)
         self.dialog.exec_()
-
 
     def get_selected_material(self):
         try:
@@ -140,13 +147,22 @@ class Window(QtWidgets.QMainWindow):
             #traceback.print_exc()
             showDialogErrorMessageBox()
 
-
-
     def isValidBeamInput(self):
         if None in [self.user_beam_length, self.user_beam_cross_section, self.get_selected_material()] or len(self.user_beam_loads) == 0 or len(self.user_beam_supports) == 0:
             return False
         return True
 
+def isAllSupportDataPresent(dialog):
+    return not None in [dialog.support_type, dialog.support_location]
+
+def isAllPointLoadDialogDataPresent(dialog):
+    return not None in [dialog.inputted_load_location, dialog.inputted_load_magnitude]
+
+def isAllMomentDialogDataPresent(dialog):
+    return not None in [dialog.inputted_load_location, dialog.inputted_load_magnitude]
+
+def isAllUDLDialogWindowDataPresent(dialog):
+    return not None in [dialog.inputted_load_magnitude, dialog.inputted_load_start_location, dialog.inputted_load_end_location, dialog.inputted_load_order]
 
 class InvalidBeamInputException(Exception):
     pass
