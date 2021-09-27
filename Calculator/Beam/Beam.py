@@ -197,14 +197,15 @@ class Beam():
 
     def apply_loads_to_symbeamBeam_object(self):
         for load in self.point_loads:
-            self.symbeam_beam.add_point_load(load.start_location, load.magnitude)
-            #self.symbeam_beam.add_point_load(load.start_location, -1 * load.magnitude) #negative magnitude to coreect for differences in sign convention between the two modules
+            #self.symbeam_beam.add_point_load(load.start_location, load.magnitude)
+            self.symbeam_beam.add_point_load(load.start_location, -1 * load.magnitude) #negative magnitude to correct for differences in sign convention between the two modules
 
         for moment in self.moments:
             self.symbeam_beam.add_point_moment(moment.start_location, moment.magnitude)
 
         for udl in self.udl:
-            self.symbeam_beam.add_distributed_load(udl.start_location, udl.end_location, udl.magnitude * pow(x, udl.order))
+            #self.symbeam_beam.add_distributed_load(udl.start_location, udl.end_location, udl.magnitude * pow(x, udl.order))
+            self.symbeam_beam.add_distributed_load(udl.start_location, udl.end_location, (-1 * udl.magnitude) * pow(x, udl.order)) #negative magnitude to correct for differences in sign convention between the two modules
 
 
 
@@ -237,38 +238,38 @@ class Beam():
 
     def calculate_max_bending_moment(self):
         bm = []
+        max_val = None
         for point in np.arange(0, self.length, self.length / 1000):
             bm_val = float(self.sympy_beam.bending_moment().subs(x, point))
             if abs(bm_val) != float('inf'):
                 bm.append(bm_val)
-        max_val = 0
-        for val in bm:
-            if abs(val) > abs(max_val):
-                max_val = val
+                if max_val is None or abs(bm_val) > abs(max_val):
+                    max_val = bm_val
+
         return max_val
 
     def calculate_max_shear_force(self):
         sf = []
+        max_val = None
         for point in np.arange(0, self.length, self.length / 1000):
             sf_val = float(self.sympy_beam.shear_force().subs(x, point))
             if abs(sf_val) != float('inf'):
                 sf.append(sf_val)
-        max_val = 0
-        for val in sf:
-            if abs(val) > abs(max_val):
-                max_val = val
+                if max_val is None or abs(sf_val) > abs(max_val):
+                    max_val = sf_val
+
         return max_val
 
     def calculate_max_deflection(self):
         de = []
+        max_val = None
         for point in np.arange(0, self.length, self.length / 1000):
             de_val = float(self.sympy_beam.deflection().subs(x, point))
             if abs(de_val) != float('inf'):
                 de.append(de_val)
-        max_val = 0
-        for val in de:
-            if abs(val) > abs(max_val):
-                max_val = val
+                if max_val is None or abs(de_val) > abs(max_val):
+                    max_val = de_val
+
         return max_val
 """
 Code from GitHub used to fix the issue where sympy beams would not accept decimal values for support locations

@@ -19,26 +19,13 @@ def main():
 
     try:
         test_beam.calculate()
-        # bm = []
-        # sf = []
-        # de = []
-        # #print(test_beam.sympy_beam.shear_force())
-        # #print(type(float(test_beam.sympy_beam.bending_moment().subs(x, 0.5))))
-        # for point in np.arange(0.001, test_beam.length, 0.001):
-        #     bm_val = float(test_beam.sympy_beam.bending_moment().subs(x, point))
-        #     sf_val = float(test_beam.sympy_beam.shear_force().subs(x, point))
-        #     de_val = float(test_beam.sympy_beam.deflection().subs(x, point))
-        #     if abs(bm_val) != float('inf'):
-        #         bm.append(bm_val)
-        #     if abs(sf_val) != float('inf'):
-        #         sf.append(sf_val)
-        #     if abs(de_val) != float('inf'):
-        #         de.append(de_val)
-        # print(max(bm), min(sf), max(de))
-        # print(sf)
-        #print(type(test_beam.sympy_beam.bending_moment().subs(x, 0.5)))
-        #print(test_beam.sympy_beam.bending_moment().subs(x, 0.5))
-        #test_beam.sympy_beam.plot_bending_moment()
+        test_beam.sympy_beam.plot_bending_moment()
+        test_beam.sympy_beam.plot_shear_force()
+        test_beam.sympy_beam.plot_deflection()
+        fbd = test_beam.sympy_beam.draw()
+        fbd.show()
+        test_beam.symbeam_beam.plot()
+        plt.show()
     except:
         traceback.print_exc()
 
