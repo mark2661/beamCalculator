@@ -30,14 +30,13 @@ class Reset_dialog_window(QtWidgets.QDialog):
         self.mainWindow.clear_user_beam_moments()
 
     def resetUDL(self):
-        pass
+        self.mainWindow.clear_user_beam_udl()
 
     def resetMaterial(self):
         self.mainWindow.clear_user_beam_material()
 
     def resetCrossSection(self):
         self.mainWindow.clear_user_beam_cross_section()
-
 
     def resetAll(self):
         for check_box in self.check_box_to_reset_function_mappings.keys():

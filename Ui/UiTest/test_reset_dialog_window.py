@@ -30,7 +30,7 @@ class TestResetDialogWindow:
         mmw = MainWindow()
         mmw.user_beam_length = 1
         mmw.user_beam_cross_section = SquareCrossSection(0.1)
-        mmw.user_beam_loads = [("point", 100.0, 0.5), ("moment", 100.0, 0.1)]
+        mmw.user_beam_loads = [("point", 100.0, 0.5), ("moment", 100.0, 0.1), ('udl', -100.0, 0.5, 1, 0)]
         mmw.user_beam_supports = [("pin", 0.0), ("roller", 1)]
         #mockMainWindow.crossSectionSelectionComboBox.setCurrentIndex(1)
         #mockMainWindow.materialSelectionComboBox.setCurrentIndex(1)
@@ -80,12 +80,14 @@ class TestResetDialogWindow:
         for load in window.mainWindow.user_beam_loads:
             assert load[0] != 'moment'
 
-    @pytest.mark.skip(reason="functionality to add UDL not implemented")
+
     def test_resetUDL(self, window, qtbot):
 
-        assert window.user_beam.udl != []
+        assert window.mainWindow.user_beam_loads != []
         window.resetUDL()
-        assert window.user_beam.udl == []
+        assert len(window.mainWindow.user_beam_loads) > 0
+        for load in window.mainWindow.user_beam_loads:
+            assert load[0] != 'udl'
 
     @pytest.mark.skip(reason="functionality to add moments not yet tested")
     def test_resetMaterial(self, window, qtbot):

@@ -98,7 +98,6 @@ class Window(QtWidgets.QMainWindow):
         self.dialog = Add_UDL_dialog_window()
         self.dialog.exec_()
         if isAllUDLDialogWindowDataPresent(self.dialog):
-            print("here")
             self.user_beam_loads.append(("udl", self.dialog.inputted_load_magnitude, self.dialog.inputted_load_start_location, self.dialog.inputted_load_end_location, self.dialog.inputted_load_order))
 
     def open_cross_section_dialog_window(self):
@@ -144,7 +143,7 @@ class Window(QtWidgets.QMainWindow):
             else:
                 raise InvalidBeamInputException
         except:
-            #traceback.print_exc()
+            traceback.print_exc()
             showDialogErrorMessageBox()
 
     def isValidBeamInput(self):

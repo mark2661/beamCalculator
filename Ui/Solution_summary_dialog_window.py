@@ -17,7 +17,7 @@ class Solution_summary_dialog_window(QtWidgets.QDialog):
 
         #set label text
         self.supportReactionsLabel.setText(self.format_support_reaction_text())
-        #self.maxBendingMomentLabel.setText(str(round(float(self.user_beam.maxBM), 2)))
+        self.maxBendingMomentLabel.setText(str(round(float(self.user_beam.maxBM), 2)))
         self.maxShearForceLabel.setText(str(round(float(self.user_beam.maxSF), 2)))
         self.maxDeflectionLabel.setText(str(round(float(self.user_beam.maxDeflection), 2)))
 

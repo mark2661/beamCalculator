@@ -1,3 +1,4 @@
+import sys
 import traceback
 from abc import ABC, abstractmethod
 
@@ -7,7 +8,9 @@ from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 from sympy.physics.continuum_mechanics.beam import Beam as sympyBeam
 from sympy import *
+from sympy.abc import x
 from symbeam import beam as symbeamBeam
+import numpy as np
 import matplotlib.pyplot as plt
 from itertools import chain
 
@@ -113,7 +116,7 @@ class Beam():
     ** FUNCTIONS FOR FORCES **
     """
 
-    def add_load(self,type_of_load, magnitude, location, end_location=None):
+    def add_load(self,type_of_load, magnitude, location, end_location=None, order=None):
         self.load_mappings[type_of_load](magnitude, location, end_location)
 
     def add_point_load(self,magnitude,location, *args):
@@ -180,15 +183,12 @@ class Beam():
         self.apply_supports_to_symbeamBeam_object()
         self.apply_loads_to_symbeamBeam_object()
         self.symbeam_beam.solve(output=False)
-        # self.symbeam_beam.plot()
-        # plt.show()
 
 
-        self.maxBM = self.sympy_beam.max_bmoment()[1]
-        self.maxSF = self.sympy_beam.max_shear_force()[1]
-        self.maxDeflection = self.sympy_beam.max_deflection()[1]
-        #print(self.sympy_beam.reaction_loads)
-
+        #calculate the maximum bending moment, shear force and deflection
+        self.maxBM = self.calculate_max_bending_moment()
+        self.maxSF = self.calculate_max_shear_force()
+        self.maxDeflection = self.calculate_max_deflection()
 
 
     def apply_supports_to_symbeamBeam_object(self):
@@ -203,8 +203,8 @@ class Beam():
         for moment in self.moments:
             self.symbeam_beam.add_point_moment(moment.start_location, moment.magnitude)
 
-        # for udl in self.udl:
-        #     self.symbeam_beam.apply_load(udl.magnitude, udl.start_location, 0, end=udl.end_location)
+        for udl in self.udl:
+            self.symbeam_beam.add_distributed_load(udl.start_location, udl.end_location, udl.magnitude * pow(x, udl.order))
 
 
 
@@ -216,7 +216,7 @@ class Beam():
             beam.apply_load(moment.magnitude, moment.start_location, -2)
 
         for udl in self.udl:
-            beam.apply_load(udl.magnitude, udl.start_location, udl.order, end=udl.end_location)
+            beam.apply_load(udl.magnitude, udl.start_location, udl.order, udl.end_location)
 
     # def apply_supports_to_sympy_beam_object(self, beam):
     #     for support in self.supports:
@@ -235,7 +235,41 @@ class Beam():
                 beam.apply_support(beam, symbl, support.location, support.supportType)
         return reaction_symbols
 
+    def calculate_max_bending_moment(self):
+        bm = []
+        for point in np.arange(0, self.length, self.length / 1000):
+            bm_val = float(self.sympy_beam.bending_moment().subs(x, point))
+            if abs(bm_val) != float('inf'):
+                bm.append(bm_val)
+        max_val = 0
+        for val in bm:
+            if abs(val) > abs(max_val):
+                max_val = val
+        return max_val
 
+    def calculate_max_shear_force(self):
+        sf = []
+        for point in np.arange(0, self.length, self.length / 1000):
+            sf_val = float(self.sympy_beam.shear_force().subs(x, point))
+            if abs(sf_val) != float('inf'):
+                sf.append(sf_val)
+        max_val = 0
+        for val in sf:
+            if abs(val) > abs(max_val):
+                max_val = val
+        return max_val
+
+    def calculate_max_deflection(self):
+        de = []
+        for point in np.arange(0, self.length, self.length / 1000):
+            de_val = float(self.sympy_beam.deflection().subs(x, point))
+            if abs(de_val) != float('inf'):
+                de.append(de_val)
+        max_val = 0
+        for val in de:
+            if abs(val) > abs(max_val):
+                max_val = val
+        return max_val
 """
 Code from GitHub used to fix the issue where sympy beams would not accept decimal values for support locations
 """

@@ -1,7 +1,6 @@
 #go through and comment files properly explaining what all functions do
 #clean up redundant code
 #write more robust test for the beam class
-#fix max_bMoment function (potential bug)
 
 #Add UDL functionality
     #Create add UDL dialog window (check)
@@ -12,13 +11,15 @@
         #open moment dialog window function (check)
         #store data in user_beam_loads class variable (check)
         #up main_window test to include test for add UDL (check)
-        #update clear function in main window and reset dialog window to include UDL functionality
-        #update test for clear functions to include UDL
-    #write functions to handle moments in Beam.py
-        #update beam test to include examples with UDL
+        #update clear function in main window and reset dialog window to include UDL functionality (check)
+        #update test for clear functions to include UDL (check)
+    #write functions to handle UDL in Beam.py (check)
+        #update beam test to include examples with UDL (check)
 
 #Add length unit selection functionality
 #Add force unit selection functionality
+
+
 #Fix sign convention differences between the two lib
     #Fix broken test cases (new unit convention)
 

@@ -7,7 +7,7 @@ def isValidLoadMagnitude(magnitude):
 
 def isValidStartLoadLocation(start, end):
     #need tocheck if location is within length of beam
-    return float(start) > 0 and start <= end
+    return float(start) >= 0 and start <= end
 
 def isValidLoadEndLocation(end, start):
     # need tocheck if location is within length of beam
