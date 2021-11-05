@@ -236,41 +236,58 @@ class Beam():
                 beam.apply_support(beam, symbl, support.location, support.supportType)
         return reaction_symbols
 
+    def convert_to_numpy_piecewiese(self, f):
+        x = symbols("x")
+        return lambdify(x, f.rewrite(Piecewise), modules='numpy')
+
+    # def calculate_max_bending_moment(self):
+    #     bm = []
+    #     max_val = None
+    #     for point in np.arange(0, self.length, self.length / 1000):
+    #         bm_val = float(self.sympy_beam.bending_moment().subs(x, point))
+    #         if abs(bm_val) != float('inf'):
+    #             bm.append(bm_val)
+    #             if max_val is None or abs(bm_val) > abs(max_val):
+    #                 max_val = bm_val
+    #
+    #     return max_val
     def calculate_max_bending_moment(self):
-        bm = []
-        max_val = None
-        for point in np.arange(0, self.length, self.length / 1000):
-            bm_val = float(self.sympy_beam.bending_moment().subs(x, point))
-            if abs(bm_val) != float('inf'):
-                bm.append(bm_val)
-                if max_val is None or abs(bm_val) > abs(max_val):
-                    max_val = bm_val
+        f = self.convert_to_numpy_piecewiese(self.sympy_beam.bending_moment())
+        x_range = np.linspace(0, self.length, 10000)
+        return max(f(x_range), key=abs)
 
-        return max_val
-
+    # def calculate_max_shear_force(self):
+    #     sf = []
+    #     max_val = None
+    #     for point in np.arange(0, self.length, self.length / 1000):
+    #         sf_val = float(self.sympy_beam.shear_force().subs(x, point))
+    #         if abs(sf_val) != float('inf'):
+    #             sf.append(sf_val)
+    #             if max_val is None or abs(sf_val) > abs(max_val):
+    #                 max_val = sf_val
+    #
+    #     return max_val
     def calculate_max_shear_force(self):
-        sf = []
-        max_val = None
-        for point in np.arange(0, self.length, self.length / 1000):
-            sf_val = float(self.sympy_beam.shear_force().subs(x, point))
-            if abs(sf_val) != float('inf'):
-                sf.append(sf_val)
-                if max_val is None or abs(sf_val) > abs(max_val):
-                    max_val = sf_val
+        f = self.convert_to_numpy_piecewiese(self.sympy_beam.shear_force())
+        x_range = np.linspace(0, self.length, 10000)
+        return max(f(x_range), key=abs)
 
-        return max_val
+    # def calculate_max_deflection(self):
+    #     de = []
+    #     max_val = None
+    #     for point in np.arange(0, self.length, self.length / 1000):
+    #         de_val = float(self.sympy_beam.deflection().subs(x, point))
+    #         if abs(de_val) != float('inf'):
+    #             de.append(de_val)
+    #             if max_val is None or abs(de_val) > abs(max_val):
+    #                 max_val = de_val
+    #
+    #     return max_val
 
     def calculate_max_deflection(self):
-        de = []
-        max_val = None
-        for point in np.arange(0, self.length, self.length / 1000):
-            de_val = float(self.sympy_beam.deflection().subs(x, point))
-            if abs(de_val) != float('inf'):
-                de.append(de_val)
-                if max_val is None or abs(de_val) > abs(max_val):
-                    max_val = de_val
-
-        return max_val
+        f = self.convert_to_numpy_piecewiese(self.sympy_beam.deflection())
+        x_range = np.linspace(0, self.length, 10000)
+        return max(f(x_range), key=abs)
 """
 Code from GitHub used to fix the issue where sympy beams would not accept decimal values for support locations
 """

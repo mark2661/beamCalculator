@@ -19,13 +19,30 @@ def main():
 
     try:
         test_beam.calculate()
-        test_beam.sympy_beam.plot_bending_moment()
-        test_beam.sympy_beam.plot_shear_force()
+        # test_beam.sympy_beam.plot_bending_moment()
+        # test_beam.sympy_beam.plot_shear_force()
+        # test_beam.sympy_beam.plot_deflection()
+        # fbd = test_beam.sympy_beam.draw()
+        # fbd.show()
+        # test_beam.symbeam_beam.plot()
+        # plt.show()
+        # print(test_beam.sympy_beam.bending_moment())
+        f = test_beam.sympy_beam.bending_moment()
+        # f = f.rewrite(Piecewise)
+        # new_f = lambdify(x, f, modules='numpy')
+        # print(new_f)
+        # x1 = np.linspace(0, test_beam.length, 100000)
+        # print(max(new_f(x1)))
+        # plt.plot(x1, new_f(x1))
+        # plt.show()
+        print(test_beam.maxBM)
+        print(test_beam.maxSF)
+        print(test_beam.maxDeflection)
         test_beam.sympy_beam.plot_deflection()
-        fbd = test_beam.sympy_beam.draw()
-        fbd.show()
-        test_beam.symbeam_beam.plot()
-        plt.show()
+        #test_beam.sympy_beam.plot_shear_force()
+
+
+        #test_beam.sympy_beam.plot_bending_moment()
     except:
         traceback.print_exc()
 

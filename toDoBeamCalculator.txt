@@ -24,6 +24,7 @@
     #Fix broken test cases (new unit convention)
 
 
+#Potential solution for finding max BM, SF and Deflection Faster (fixed)
 
 
 
