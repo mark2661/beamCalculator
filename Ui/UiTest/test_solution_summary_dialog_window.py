@@ -40,7 +40,7 @@ class TestSolutionSummaryDialogWindow:
         print(window.maxBendingMomentLabel.text(), window.maxShearForceLabel.text(), window.maxDeflectionLabel.text())
         #Assert
         assert float(window.maxShearForceLabel.text()) == maxSF
-        #assert float(window.maxBendingMomentLabel.text()) == maxBM
+        assert float(window.maxBendingMomentLabel.text()) == maxBM
         assert float(window.maxDeflectionLabel.text()) == maxDeflection
 
 def main():

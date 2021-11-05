@@ -1,6 +1,6 @@
 #go through and comment files properly explaining what all functions do
 #clean up redundant code
-#write more robust test for the beam class
+
 
 #Add UDL functionality
     #Create add UDL dialog window (check)
@@ -18,14 +18,9 @@
 
 #Add length unit selection functionality
 #Add force unit selection functionality
-
-
 #Fix sign convention differences between the two lib
     #Fix broken test cases (new unit convention)
-
-
-#Potential solution for finding max BM, SF and Deflection Faster (fixed)
-
+#Research how to improve UI***
 
 
 Future Update
