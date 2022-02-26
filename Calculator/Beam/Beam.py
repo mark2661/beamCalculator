@@ -2,9 +2,9 @@ import sys
 import traceback
 from abc import ABC, abstractmethod
 
-#from BEAM.Load.Moment import Moment
-#from BEAM.Load.PointLoad import PointLoad
-#from BEAM.Load.UDL import UDL
+# from BEAM.Load.Moment import Moment
+# from BEAM.Load.PointLoad import PointLoad
+# from BEAM.Load.UDL import UDL
 import matplotlib.pyplot as plt
 from sympy.physics.continuum_mechanics.beam import Beam as sympyBeam
 from sympy import *
@@ -22,10 +22,56 @@ from beamCalculator.Calculator.Support.PinSupport import PinSupport
 from beamCalculator.Calculator.Support.RollerSupport import RollerSupport
 
 
+def convert_to_numpy_piecewise(f):
+    """ Coverts sympy Singularity function to a numpy equivalent function.
 
-class Beam():
+    This function is used to convert Piecewise sympy Singularity functions for bending moments, shear force and
+    deflection into numpy equivalent functions.
+
+    :param f: A sympy Singularity function
+    :return: An equivalent function which is compatible with numpy
+    """
+    x = symbols("x")
+    return lambdify(x, f.rewrite(Piecewise), modules='numpy')
+
+
+def apply_support_fix(self, syms, loc, support_type="fixed"):
+    """
+    Code from GitHub used to fix the issue where sympy beams would not accept decimal values for support locations
+    """
+    try:
+        reaction_load, reaction_moment = syms
+    except:
+        try:
+            reaction_load, = syms
+        except:
+            reaction_load = syms
+    loc = sympify(loc)
+    self._applied_supports.append((loc, support_type))
+    if support_type == "pin" or support_type == "roller":
+        self.apply_load(reaction_load, loc, -1)
+        self.bc_deflection.append((loc, 0))
+    else:
+        self.apply_load(reaction_load, loc, -1)
+        self.apply_load(reaction_moment, loc, -2)
+        self.bc_deflection.append((loc, 0))
+        self.bc_slope.append((loc, 0))
+        self._support_as_loads.append((reaction_moment, loc, -2, None))
+    self._support_as_loads.append((reaction_load, loc, -1, None))
+
+
+class Beam:
 
     def __init__(self, length, cross_section, material):
+        """
+
+        :param length: Total beam length
+        :type length: int, float
+        :param cross_section: The shape of the beam cross-section
+        :type cross_section: CrossSection
+        :param material: The material type of the beam
+        :type material: Material
+        """
         self.length = length
         self.cross_section = cross_section
         self.material = material
@@ -35,7 +81,6 @@ class Beam():
         self.udl = []
         self.supports = []
 
-
         self.sympy_beam = None
         self.symbeam_beam = None
 
@@ -44,11 +89,13 @@ class Beam():
         self.maxDeflection = None
 
         self.load_mappings = {"point": self.add_point_load, "moment": self.add_moment, "udl": self.add_udl}
-        self.support_mappings = {"pin": self.add_pin_support, "roller": self.add_roller_support, "fixed": self.add_fixed_support}
+        self.support_mappings = {"pin": self.add_pin_support, "roller": self.add_roller_support,
+                                 "fixed": self.add_fixed_support}
 
     """
     ** GETTERS AND SETTERS **
     """
+
     def get_length(self):
         return self.length
 
@@ -116,19 +163,19 @@ class Beam():
     ** FUNCTIONS FOR FORCES **
     """
 
-    def add_load(self,type_of_load, magnitude, location, end_location=None, order=None):
+    def add_load(self, type_of_load, magnitude, location, end_location=None, order=None):
         self.load_mappings[type_of_load](magnitude, location, end_location)
 
-    def add_point_load(self,magnitude,location, *args):
+    def add_point_load(self, magnitude, location, *args):
         new_point_load = PointLoad(magnitude, location)
         self.point_loads.append(new_point_load)
 
-    def add_moment(self,magnitude,location, *args):
-        new_moment = Moment(magnitude,location)
+    def add_moment(self, magnitude, location, *args):
+        new_moment = Moment(magnitude, location)
         self.moments.append(new_moment)
 
-    def add_udl(self,magnitude,start_location,end_location, order = 0):
-        new_udl = UDL(magnitude,start_location, end_location, order)
+    def add_udl(self, magnitude, start_location, end_location, order=0):
+        new_udl = UDL(magnitude, start_location, end_location, order)
         self.udl.append(new_udl)
 
     def clear_loads(self):
@@ -143,6 +190,7 @@ class Beam():
     """
      ** FUNCTIONS FOR SUPPORTS **
     """
+
     def add_support(self, type_of_support, location):
         self.support_mappings[type_of_support](location)
 
@@ -166,48 +214,52 @@ class Beam():
     """
 
     def calculate(self):
+        """Solves for unknown reaction forces, bending moments, shear forces and deflection
+
+        Uses a sympy.physics.continuum_mechanics.beam.Beam class object to calculate unknown reaction forces, bending
+        moment function, shear force function, and deflection function.
+        Also creates a symBeam object to generate bending moment, shear force and deflection plots
+        :return: None
+        """
         E = self.material.tensile_modulus
         I = self.cross_section.get_area_moment_of_inertia()
 
-        #create sympy beam object
+        # create sympy beam object
         self.sympy_beam = sympyBeam(self.length, E, I)
         self.sympy_beam.apply_support = apply_support_fix
         self.apply_loads_to_sympy_beam_object(self.sympy_beam)
         self.sympy_beam.solve_for_reaction_loads(*self.make_reaction_symbols_for_sympy_beam_object(self.sympy_beam))
 
-
-        #create symbeam object
+        # create symbeam object
         self.symbeam_beam = symbeamBeam(self.length)
         self.symbeam_beam.set_young(0, self.length, E)
         self.symbeam_beam.set_inertia(0, self.length, I)
-        self.apply_supports_to_symbeamBeam_object()
-        self.apply_loads_to_symbeamBeam_object()
+        self.apply_supports_to_symbeam_beam_object()
+        self.apply_loads_to_symbeam_beam_object()
         self.symbeam_beam.solve(output=False)
 
-
-        #calculate the maximum bending moment, shear force and deflection
+        # calculate the maximum bending moment, shear force and deflection
         self.maxBM = self.calculate_max_bending_moment()
         self.maxSF = self.calculate_max_shear_force()
         self.maxDeflection = self.calculate_max_deflection()
 
-
-    def apply_supports_to_symbeamBeam_object(self):
+    def apply_supports_to_symbeam_beam_object(self):
         for support in self.supports:
             self.symbeam_beam.add_support(support.location, support.supportType)
 
-    def apply_loads_to_symbeamBeam_object(self):
+    def apply_loads_to_symbeam_beam_object(self):
         for load in self.point_loads:
-            #self.symbeam_beam.add_point_load(load.start_location, load.magnitude)
-            self.symbeam_beam.add_point_load(load.start_location, -1 * load.magnitude) #negative magnitude to correct for differences in sign convention between the two modules
+            # self.symbeam_beam.add_point_load(load.start_location, load.magnitude)
+            self.symbeam_beam.add_point_load(load.start_location,
+                                             -1 * load.magnitude)  # negative magnitude to correct for differences in sign convention between the two modules
 
         for moment in self.moments:
             self.symbeam_beam.add_point_moment(moment.start_location, moment.magnitude)
 
         for udl in self.udl:
-            #self.symbeam_beam.add_distributed_load(udl.start_location, udl.end_location, udl.magnitude * pow(x, udl.order))
-            self.symbeam_beam.add_distributed_load(udl.start_location, udl.end_location, (-1 * udl.magnitude) * pow(x, udl.order)) #negative magnitude to correct for differences in sign convention between the two modules
-
-
+            # self.symbeam_beam.add_distributed_load(udl.start_location, udl.end_location, udl.magnitude * pow(x, udl.order))
+            self.symbeam_beam.add_distributed_load(udl.start_location, udl.end_location, (-1 * udl.magnitude) * pow(x,
+                                                                                                                    udl.order))  # negative magnitude to correct for differences in sign convention between the two modules
 
     def apply_loads_to_sympy_beam_object(self, beam):
         for load in self.point_loads:
@@ -224,6 +276,7 @@ class Beam():
     #         beam.apply_support(beam, support.location, support.supportType)
 
     def make_reaction_symbols_for_sympy_beam_object(self, beam):
+
         reaction_symbols = []
         for support in self.supports:
             if support.supportType == "fixed":
@@ -237,47 +290,19 @@ class Beam():
         return reaction_symbols
 
     def calculate_max_bending_moment(self):
-        f = self.convert_to_numpy_piecewiese(self.sympy_beam.bending_moment())
+        f = convert_to_numpy_piecewise(self.sympy_beam.bending_moment())
         x_range = np.linspace(0, self.length, 10000)
         return max(f(x_range), key=abs)
 
     def calculate_max_shear_force(self):
-        f = self.convert_to_numpy_piecewiese(self.sympy_beam.shear_force())
+        f = convert_to_numpy_piecewise(self.sympy_beam.shear_force())
         x_range = np.linspace(0, self.length, 10000)
         return max(f(x_range), key=abs)
 
     def calculate_max_deflection(self):
-        f = self.convert_to_numpy_piecewiese(self.sympy_beam.deflection())
+        f = convert_to_numpy_piecewise(self.sympy_beam.deflection())
         x_range = np.linspace(0, self.length, 10000)
         return max(f(x_range), key=abs)
-
-    def convert_to_numpy_piecewiese(self, f):
-        x = symbols("x")
-        return lambdify(x, f.rewrite(Piecewise), modules='numpy')
-"""
-Code from GitHub used to fix the issue where sympy beams would not accept decimal values for support locations
-"""
-def apply_support_fix(self, syms, loc, type="fixed"):
-    try:
-        reaction_load,reaction_moment = syms
-    except:
-        try:
-            reaction_load, = syms
-        except:
-            reaction_load = syms
-    loc = sympify(loc)
-    self._applied_supports.append((loc, type))
-    if type == "pin" or type == "roller":
-        self.apply_load(reaction_load, loc, -1)
-        self.bc_deflection.append((loc, 0))
-    else:
-        self.apply_load(reaction_load, loc, -1)
-        self.apply_load(reaction_moment, loc, -2)
-        self.bc_deflection.append((loc, 0))
-        self.bc_slope.append((loc, 0))
-        self._support_as_loads.append((reaction_moment, loc, -2, None))
-    self._support_as_loads.append((reaction_load, loc, -1, None))
-
 
 
 
@@ -311,4 +336,3 @@ def apply_support_fix(self, syms, loc, type="fixed"):
     # @abstractmethod
     # def calculate_support_reactions(self):
     #     pass
-

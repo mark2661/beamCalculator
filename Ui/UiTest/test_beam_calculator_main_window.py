@@ -284,7 +284,7 @@ class TestBeamCalculatorMainWindow:
         window.user_beam_cross_section = inputtedBeamCrossSection
 
         #Action
-        window.isValidBeamInput()
+        window.is_valid_beam_input()
 
 
 
