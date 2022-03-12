@@ -4,5 +4,5 @@ Users also have the ability to display and save labeled free body diagrams, bend
 
 # What I Learned
 * Objected Oriented Programming with Python
-* GUI Development using PyQt and Qt Designer
-* Unit testing GUI's with PyTest
+* GUI Development using [PyQt](https://doc.qt.io/qtforpython/) and [Qt Designer](https://doc.qt.io/qt-5/qtdesigner-manual.html)
+* Unit testing GUI's with [PyTest](https://docs.pytest.org/en/7.0.x/)
