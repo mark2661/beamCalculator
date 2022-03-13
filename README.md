@@ -8,9 +8,9 @@ Users also have the ability to display and save labeled free body diagrams, bend
 * Unit testing GUI's with [PyTest](https://docs.pytest.org/en/7.0.x/)
 # Features
 * Allows users to create a customised 2D beam model
-  * specify beam length
-  * specify force location
-  * specify joint location
+  * users can specify beam length
+  * users can specify force location
+  * users can specify joint location
   * supports point loads and UDL's
   * supports cantilever, roller and pin joints
   * supports Steel AISI 1045 and Cast Iron Grade20 materials 
