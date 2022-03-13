@@ -24,7 +24,7 @@ python3 Ui/beam_calculator_main_window.py
 ### Enter cross-section type, dimensions and material
 ![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/main_window.png)
 ### Click "Add beam" and enter overall beam length
-![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/add_beam_dialog.png)
+![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/add_beam.png)
 ### Add supports
 ![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/add_support_dialog_window.png)
 ### Add loading details
