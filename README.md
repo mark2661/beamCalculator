@@ -21,6 +21,13 @@ Users also have the ability to display and save labeled free body diagrams, bend
 ```python
 python3 Ui/beam_calculator_main_window.py
 ```
+![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/main_window.png)
+![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/add_beam_dialog.png)
+![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/add_support_dialog_window.png)
+![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/point_load_dialog.png)
+![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/results.png)
+![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/results.png)
+
 ## Future Updates
 * Add a preview window which shows a simple 2D sketch of the current state of the user beam
 * Add a material database with a custom API
