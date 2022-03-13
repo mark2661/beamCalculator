@@ -6,7 +6,7 @@ Users also have the ability to display and save labeled free body diagrams, bend
 * Objected Oriented Programming with Python
 * GUI Development using [PyQt](https://doc.qt.io/qtforpython/) and [Qt Designer](https://doc.qt.io/qt-5/qtdesigner-manual.html)
 * Unit testing GUI's with [PyTest](https://docs.pytest.org/en/7.0.x/)
-# Features
+## Features
 * Allows users to create a customised 2D beam model
   * users can specify beam length
   * users can specify force location
@@ -17,3 +17,7 @@ Users also have the ability to display and save labeled free body diagrams, bend
   * supports both solid and hollow cross-sections
   * supports square and circulr cross sections
 * Save Free body, bending moment, shear froce and deflection plots for use in an engineering report
+## Future Updates
+* Add a preview window which shows a simple 2D sketch of the current state of the user beam
+* Add a material database with a custom API
+* Add support for non-uniform distributed loads
