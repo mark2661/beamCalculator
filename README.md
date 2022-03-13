@@ -25,9 +25,12 @@ python3 Ui/beam_calculator_main_window.py
 ![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/main_window.png)
 ### Click "Add beam" and enter overall beam length
 ![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/add_beam_dialog.png)
+### Add supports
 ![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/add_support_dialog_window.png)
+### Add loading details
 ![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/point_load_dialog.png)
 ![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/results.png)
+### Click "Generate Report"
 ![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/report.png)
 
 ## Future Updates
