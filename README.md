@@ -17,7 +17,7 @@ Users also have the ability to display and save labeled free body diagrams, bend
   * supports both solid and hollow cross-sections
   * supports square and circulr cross sections
 * Save Free body, bending moment, shear force and deflection plots for use in an engineering report
-## Usage (currently still in development)
+## Example Usage (currently still in development)
 ```python
 python3 Ui/beam_calculator_main_window.py
 ```
