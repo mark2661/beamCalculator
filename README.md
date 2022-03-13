@@ -29,6 +29,7 @@ python3 Ui/beam_calculator_main_window.py
 ![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/add_support_dialog_window.png)
 ### Add loading details
 ![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/point_load_dialog.png)
+### Solve
 ![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/results.png)
 ### Click "Generate Report"
 ![alt text](https://github.com/mark2661/beamCalculator/blob/main/images/report.png)
